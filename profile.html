@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main class="profile-page-main">
+        <section class="profile-section">
+            <h1>Your Profile</h1>
+            <p class="section-subtitle">Update your details and manage your active listings.</p>
+            
+            <div class="profile-layout-container">
+                
+                <div class="profile-details-column">
+                    <form id="profile-form" class="profile-form">
+                        <h2>Personal Details</h2>
+                        <div class="avatar-upload">
+                            <img id="avatar-image" src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg" alt="Your Avatar" class="profile-avatar">
+                            <label for="avatar-file-input" class="btn-avatar-upload">Upload Picture</label>
+                            <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="full-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone-number">WhatsApp Number</label>
+                            <input type="tel" id="phone-number" placeholder="e.g., 911234567890">
+                        </div>
+                        
+                        <hr>
+
+                        <h2>Business Details (Optional)</h2>
+                        <div class="avatar-upload">
+                            <img id="business-logo-image" src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg" alt="Your Business Logo" class="profile-avatar">
+                            <label for="business-logo-input" class="btn-avatar-upload">Upload Logo</label>
+                            <input type="file" id="business-logo-input" accept="image/*" style="display: none;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business-name">Business Name</label>
+                            <input type="text" id="business-name" placeholder="e.g., Campus Cakes">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div> <div class="profile-listings-column">
+                    <div class="my-listings-section">
+                        <h2 class="form-title">Your Active Listings</h2>
+                        <p class="form-subtitle">Manage the items and services you have posted for sale.</p>
+                        
+                        <div id="my-listings-container">
+                            <div class="loading-spinner"></div> 
+                        </div>
+                    </div>
+                </div> </div> </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

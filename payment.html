@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Your Account - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions">
+                
+            </div>
+            
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="simple-form-section">
+            <div class="form-container">
+                <h2 class="form-title">Post Your Business Listing</h2>
+                <p class="form-subtitle">To post a business listing, please complete a one-time verification fee of **₹60**.</p>
+                
+                <div class="payment-instructions">
+                    <ol>
+                        <li>
+                            <strong>Step 1: Pay the Fee</strong>
+                            <p>Scan the QR code with any UPI app or pay directly to the UPI ID.</p>
+                            
+                            <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/our-qr-code.png" alt="Pay with UPI" class="payment-qr">
+                            
+                            <p class="upi-id"><strong>UPI ID:</strong> souradeeppradhan7@oksbi</p>
+                        </li>
+                        
+                        <li>
+                            <strong>Step 2: Get Verified</strong>
+                            <p>
+                                After paying, click the button below to submit your payment screenshot and registered email address.
+                            </p>
+                            <a href="https://forms.gle/pUAAAE2dsw1XExQb9" target="_blank" class="btn btn-primary" style="margin-top: 10px; width: 100%; text-align: center;">
+                                <i class='bx bx-check-square' style="vertical-align: middle; margin-right: 5px;"></i>
+                                Submit Payment Details
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <strong>Step 3: Wait for Activation</strong>
+                            <p>Your account will be manually activated within 24 hours. Once activated, the "Create Your Business Listing" button will be unlocked.</p>
+                        </li>
+                    </ol>
+                </div>
+                
+                <a href="business.html" class="btn btn-secondary" style="margin-top: 20px;">Go Back</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Businesses - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo"><img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo"><span>2ndhand</span></a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions"></div>
+
+           
+
+        </nav>
+    </header>
+
+    <main>
+        <div class="browse-page-header container">
+            <h1 class="section-title">Explore Campus Businesses</h1>
+            <p class="section-subtitle">Discover services and homemade goods from fellow students.</p>
+            
+            <div class="create-listing-cta">
+                <a href="business_sell.html" class="btn btn-primary" id="create-business-listing-btn">Create Your Business Listing</a>
+                <a href="featured.html" class="btn btn-secondary">Get Featured!</a>
+            </div>
+            
+            <div class="browse-search-bar">
+                <i class='bx bx-search'></i>
+                <input type="text" id="search-filter" placeholder="Search for services, food, etc...">
+            </div>
+        </div>
+
+        <div class="browse-layout container" id="business-layout">
+            <aside class="filter-sidebar">
+                <h3>Filters</h3>
+                <div class="filter-group">
+                    <h4>Category</h4>
+                    <div class="category-filters" id="category-filter">
+                        <div class="radio-group">
+                            <input type="radio" id="cat-all" name="category" value="all" checked>
+                            <label for="cat-all">All Categories</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="cat-food" name="category" value="Food & Drinks">
+                            <label for="cat-food">Food & Drinks</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="cat-services" name="category" value="Services">
+                            <label for="cat-services">Services</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="cat-handmade" name="category" value="Handmade Goods">
+                            <label for="cat-handmade">Handmade Goods</label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="product-listing-area">
+                <div class="listing-grid" id="business-listing-grid">
+                    <div class="loading-spinner"></div>
+                </div>
+
+                <div class="load-more-container">
+                    <button id="load-more-btn-business" class="btn btn-primary load-more-btn">Load More</button>
+                </div>
+                </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer-section"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

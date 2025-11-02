@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main class="product-page-main">
+        <section class="product-detail-section container" id="product-detail-container">
+            <div class="loading-spinner"></div>
+        </section>
+
+        <section class="reviews-section container">
+            <h2>Feedback</h2>
+            <div id="reviews-list">
+                </div>
+
+            <div id="review-form-container">
+                <h3>Leave a Review</h3>
+                <form id="review-form">
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div class="star-rating">
+                            <input type="radio" id="5-stars" name="rating" value="5" /><label for="5-stars">★</label>
+                            <input type="radio" id="4-stars" name="rating" value="4" /><label for="4-stars">★</label>
+                            <input type="radio" id="3-stars" name="rating" value="3" /><label for="3-stars">★</label>
+                            <input type="radio" id="2-stars" name="rating" value="2" /><label for="2-stars">★</label>
+                            <input type="radio" id="1-star" name="rating" value="1" /><label for="1-star">★</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Comment</label>
+                        <textarea id="comment" rows="4" placeholder="Share your thoughts about the product..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Add Photos (optional, up to 5)</label>
+                        <div class="multi-image-preview" id="review-image-preview"></div>
+                        <label for="review-images" class="btn-upload-label"><i class='bx bx-upload'></i> Choose Files</label>
+                        <input type="file" id="review-images" accept="image/*" multiple style="display: none;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer-section">
+        </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

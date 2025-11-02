@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Business Listing - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+
+            
+            
+            <div class="nav-actions"></div>
+        </nav>
+    </header>
+
+    <main class="sell-page-main">
+        <section class="sell-section">
+            <h1 class="section-title">Create Your Business Listing</h1>
+            <p class="section-subtitle">List your service or product menu for others to see.</p>
+            
+            <form id="business-sell-form" class="sell-form">
+                <h2>Listing Details</h2>
+                <p>Provide details about your service or business.</p>
+
+                <div class="form-group">
+                    <label>Upload Photos (e.g., logo, product photos, up to 5)</label>
+                    <div class="multi-image-preview" id="image-preview-container"></div>
+                    <label for="item-images" class="btn-upload-label">
+                        <i class='bx bx-upload'></i> Choose Files
+                    </label>
+                    <input type="file" id="item-images" accept="image/*" multiple style="display: none;">
+                </div>
+
+                <div class="form-group">
+                    <label for="item-title">Product / Service Name</label>
+                    <input type="text" id="item-title" placeholder="e.g., Anjali's Homemade Cakes" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="item-description">Description</label>
+                    <textarea id="item-description" rows="4" placeholder="Describe your business, menu, or the services you offer."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item-category">Category</label>
+                        <select id="item-category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Food & Drinks">Food & Drinks</option>
+                            <option value="Services">Services (e.g., Tutoring, Repairs)</option>
+                            <option value="Handmade Goods">Handmade Goods</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-price">Price</label>
+                        <div class="price-input">
+                            <span>₹</span>
+                            <input type="number" id="item-price" placeholder="0" required>
+                        </div>
+                        <small>Enter a starting price or price per item.</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-location">Your Location / Campus Area</label>
+                    <input type="text" id="item-location" placeholder="e.g., Main Campus, Hall 5" required>
+                </div>
+                
+                <button type="submit" id="submit-listing-btn" class="btn btn-primary">Create Business Listing</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
