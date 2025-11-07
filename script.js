@@ -345,9 +345,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const location = document.getElementById('item-location')?.value;
                 
                 if (!title || !price || !category) {
-                     alert('Please fill in Title, Price, and Category.');
-                     if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'List Item for Sale'; }
-                     return;
+                       alert('Please fill in Title, Price, and Category.');
+                       if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'List Item for Sale'; }
+                       return;
                 }
 
                 const { error: insertError } = await _supabase.from('products').insert({
@@ -467,19 +467,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const firstImage = product.image_url && product.image_url.length > 0 ? product.image_url[0] : 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
                 const productCardHTML = `
                     <div class="product-card-link"> <div class="product-card">
-                            <a href="product.html?id=${product.id}" class="product-card-image-link"> <img src="${firstImage}" alt="${product.title}">
-                            </a>
-                            <div class="product-info">
-                                <h3><a href="product.html?id=${product.id}">${product.title}</a></h3> <p class="price">₹${product.price}</p>
-                                <div class="product-card-footer">
-                                    <div class="seller-info">
-                                        <img src="${product.profiles?.avatar_url || 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg'}" alt="Seller">
-                                        <span>${product.profiles?.full_name || 'Campus Seller'}</span>
-                                    </div>
-                                    <button class="btn-add-to-cart" data-id="${product.id}" data-type="product"><i class='bx bx-cart-add'></i> Add to Cart</button>
+                        <a href="product.html?id=${product.id}" class="product-card-image-link"> <img src="${firstImage}" alt="${product.title}">
+                        </a>
+                        <div class="product-info">
+                            <h3><a href="product.html?id=${product.id}">${product.title}</a></h3> <p class="price">₹${product.price}</p>
+                            <div class="product-card-footer">
+                                <div class="seller-info">
+                                    <img src="${product.profiles?.avatar_url || 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg'}" alt="Seller">
+                                    <span>${product.profiles?.full_name || 'Campus Seller'}</span>
                                 </div>
+                                <button class="btn-add-to-cart" data-id="${product.id}" data-type="product"><i class='bx bx-cart-add'></i> Add to Cart</button>
                             </div>
                         </div>
+                    </div>
                     </div>`;
                 listingGrid.innerHTML += productCardHTML; // Use += to append
             });
@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (priceRangeFilter) {
             priceRangeFilter.addEventListener('input', () => {
                  if (priceRangeValue) {
-                    priceRangeValue.textContent = `₹${parseInt(priceRangeFilter.value).toLocaleString('en-IN')}`;
+                     priceRangeValue.textContent = `₹${parseInt(priceRangeFilter.value).toLocaleString('en-IN')}`;
                  }
             });
             // 'change' event fires when user releases the slider
@@ -781,14 +781,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const messageSellerBtn = document.getElementById('message-seller-btn');
             if (sellerPhoneNumber && messageSellerBtn) {
                  if (/^\d{10,15}$/.test(sellerPhoneNumber.replace(/\D/g,''))) {
-                     const message = encodeURIComponent(`Hi, I'm interested in your item "${productName}" listed on 2ndhand.`);
-                     messageSellerBtn.href = `https://wa.me/${sellerPhoneNumber.replace(/\D/g,'')}?text=${message}`;
-                     messageSellerBtn.target = "_blank";
-                     messageSellerBtn.classList.remove('disabled');
+                      const message = encodeURIComponent(`Hi, I'm interested in your item "${productName}" listed on 2ndhand.`);
+                      messageSellerBtn.href = `https://wa.me/${sellerPhoneNumber.replace(/\D/g,'')}?text=${message}`;
+                      messageSellerBtn.target = "_blank";
+                      messageSellerBtn.classList.remove('disabled');
                  } else {
-                     console.warn('Invalid phone number format provided by seller:', sellerPhoneNumber);
-                     messageSellerBtn.classList.add('disabled');
-                     messageSellerBtn.href = '#';
+                      console.warn('Invalid phone number format provided by seller:', sellerPhoneNumber);
+                      messageSellerBtn.classList.add('disabled');
+                      messageSellerBtn.href = '#';
                  }
             } else if (messageSellerBtn) {
                  messageSellerBtn.classList.add('disabled');
@@ -870,13 +870,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (businessIds.length > 0) {
                  const { data: businesses, error } = await _supabase.from('business_listings').select('*').in('id', businessIds);
                  if (businesses) {
-                      const detailedBusinesses = businesses.map(b => {
+                       const detailedBusinesses = businesses.map(b => {
                            const cartItem = cartItems.find(ci => ci.product_id === b.id && ci.item_type === 'business');
                            return { ...b, cart_item_id: cartItem?.id, item_type: 'business' };
-                      });
-                      allItemDetails.push(...detailedBusinesses.filter(b => b.cart_item_id)); 
+                       });
+                       allItemDetails.push(...detailedBusinesses.filter(b => b.cart_item_id)); 
                  } else if (error) {
-                      console.error("Error fetching business listing details:", error);
+                       console.error("Error fetching business listing details:", error);
                  }
             }
 
@@ -1142,7 +1142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- *** START OF REPLACED BUSINESS BROWSE PAGE LOGIC (SCALABLE) *** ---
     const businessLayout = document.querySelector('#business-layout');
     if (businessLayout) {
-           
+        
            // --- PAYMENT GATING FOR CREATE BUTTON (No changes) ---
            const gateBusinessButton = async () => {
                 const createListingBtn = document.getElementById('create-business-listing-btn');
@@ -1151,26 +1151,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { data: { session } } = await _supabase.auth.getSession();
 
                 if (session) {
-                      const { data: profile, error } = await _supabase
+                     const { data: profile, error } = await _supabase
                            .from('profiles')
                            .select('business_status')
                            .eq('id', session.user.id)
                            .single();
 
-                      if (error && error.code !== 'PGRST116') { 
+                     if (error && error.code !== 'PGRST116') { 
                            console.error("Error fetching profile status:", error);
                            createListingBtn.href = 'payment.html';
                            createListingBtn.textContent = 'Error Checking Status - Upgrade';
                            return;
-                      }
+                     }
 
-                      if (profile && profile.business_status === 'active') {
+                     if (profile && profile.business_status === 'active') {
                            createListingBtn.href = 'business_sell.html'; 
                            createListingBtn.textContent = 'Create Your Business Listing';
-                      } else {
+                     } else {
                            createListingBtn.href = 'payment.html';
                            createListingBtn.textContent = 'Upgrade to Post';
-                      }
+                     }
                  } else {
                       createListingBtn.href = 'login.html';
                       createListingBtn.textContent = 'Log in to Post';
