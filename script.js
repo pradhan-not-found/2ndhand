@@ -8,11 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const fullName = signupForm.querySelector('#full-name').value;
             const email = signupForm.querySelector('#email').value;
+            // UPDATED: Capture phone number from the new input field
+            const phone = signupForm.querySelector('#phone').value;
             const password = signupForm.querySelector('#password').value;
+            
             const { data, error } = await _supabase.auth.signUp({
                 email: email,
                 password: password,
-                options: { data: { full_name: fullName } }
+                // UPDATED: Pass phone_number in the metadata so it saves to the profile
+                options: { 
+                    data: { 
+                        full_name: fullName,
+                        phone_number: phone
+                    } 
+                }
             });
             if (error) { alert('Error signing up: ' + error.message); }
             else {
@@ -67,6 +76,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+    }
+
+    // --- FORGOT & RESET PASSWORD LOGIC ---
+    const forgotForm = document.getElementById('forgot-form');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            const submitBtn = forgotForm.querySelector('button');
+            
+            if(submitBtn) { submitBtn.textContent = "Sending..."; submitBtn.disabled = true; }
+
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/update_password.html',
+            });
+
+            if (error) {
+                alert('Error: ' + error.message);
+                if(submitBtn) { submitBtn.textContent = "Send Reset Link"; submitBtn.disabled = false; }
+            } else {
+                alert('Check your email for the password reset link!');
+                if(submitBtn) { submitBtn.textContent = "Link Sent"; }
+            }
+        });
+    }
+
+    const updatePasswordForm = document.getElementById('update-password-form');
+    if (updatePasswordForm) {
+        // Detect if user is in recovery mode to confirm link worked
+        _supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'PASSWORD_RECOVERY') {
+                console.log("Recovery session active");
+            }
+        });
+
+        updatePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPassword = document.getElementById('new-password').value;
+
+            // FIX: Check for session BEFORE updating to prevent "Auth session missing" error
+            const { data: { session } } = await _supabase.auth.getSession();
+            
+            if (!session) {
+                alert('Unable to reset password. The link may have expired or was not clicked correctly. Please request a new "Forgot Password" link.');
+                return;
+            }
+
+            const { data, error } = await _supabase.auth.updateUser({
+                password: newPassword
+            });
+
+            if (error) {
+                alert('Error updating password: ' + error.message);
+            } else {
+                alert('Password updated successfully! Logging you in...');
+                window.location.href = 'index.html';
+            }
+        });
     }
 
     // --- NAVBAR UI ---
