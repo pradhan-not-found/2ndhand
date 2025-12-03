@@ -66,6 +66,7 @@ a:hover { text-decoration: underline; }
 .navbar-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 .nav-profile-link { display: flex; align-items: center; text-decoration: none; color: var(--text-dark); font-weight: 500; }
 .nav-profile-link:hover { text-decoration: none; }
+
 /* --- Hero Section --- */
 .hero { text-align: center; padding: 120px 5% 80px; }
 .hero h1 { font-size: 3.75rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; }
@@ -172,8 +173,6 @@ a:hover { text-decoration: underline; }
     margin-right: 0.25rem;
 }
 /* Style for the button specifically if needed */
-/* Find and replace these rules in style.css (around line 217) */
-
 button.btn-add-to-cart {
     background: none;
     border: none;
@@ -192,16 +191,14 @@ button.btn-add-to-cart i {
     margin-right: 0;  /* REMOVED: Replaced by 'gap' */
 }
 
-
-
 /* --- How It Works Section --- */
 .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 .how-it-works-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 2.5rem; text-align: center; }
 .how-it-works-card i { font-size: 3rem; color: var(--secondary-blue); margin-bottom: 1rem; display: inline-block; background-color: #eef2ff; padding: 1rem; border-radius: 50%; }
 .how-it-works-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
 
-/* --- Testimonials Section --- */
-.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+/* --- Testimonials Section (Base styles) --- */
+/* Note: The main scrolling styles are at the bottom of the file */
 .testimonial-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; }
 .stars { color: #f59e0b; font-size: 1.25rem; margin-bottom: 1rem; }
 .testimonial-card blockquote { color: var(--text-light); font-style: italic; border-left: 3px solid var(--secondary-blue); padding-left: 1rem; margin-bottom: 1.5rem; }
@@ -374,50 +371,78 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance
         scroll-snap-align: start;
     }
 }
-/* --- Creator Spotlight (in Testimonials Section) --- */
+
+/* --- Creator Spotlight (Redesigned to match Screenshot) --- */
+
 .creator-spotlight {
     text-align: center;
-    margin-top: 6rem;
-    padding-top: 4rem;
-    border-top: 1px solid var(--border-color);
-}
-.creator-avatar {
-    /* Updated size */
-    width: 150px; /* Increased from 120px */
-    height: 150px; /* Increased from 120px */
+    margin: 6rem auto 2rem auto; /* Spacing from testimonials */
+    padding: 4rem 2rem;
     
+    /* Dark Theme Styles from Screenshot */
+    background-color: #111827; /* Dark Blue/Black background */
+    border-radius: 24px;       /* Smooth rounded corners */
+    color: #ffffff;            /* White text */
+    
+    /* Shadow and Border */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    position: relative;
+    overflow: hidden;
+    max-width: 900px; /* Limits width so it doesn't stretch too far */
+}
+
+/* Fix for the creator avatar to be sharp */
+.creator-avatar {
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1.5rem;
-    display: inline-block; /* Allows for centering */
+    border: 4px solid rgba(255, 255, 255, 0.1); /* Subtle ring around photo */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
 }
+
+/* Override text colors specifically for this dark section */
 .creator-spotlight .section-title {
+    color: #ffffff;
     margin-bottom: 0.5rem;
+    font-size: 2rem;
 }
+
 .creator-spotlight h3 {
+    color: #ffffff;
     font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
-.creator-bio {
-    color: var(--text-light);
+
+.creator-spotlight .creator-bio {
+    color: #d1d5db; /* Light gray for readability on dark bg */
     max-width: 500px;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto 2.5rem auto;
     line-height: 1.7;
+    font-size: 1.1rem;
 }
+
+/* Update LinkedIn Button to pop on dark background */
 .linkedin-btn {
-    display: inline-flex; /* Aligns icon and text */
+    display: inline-flex;
     align-items: center;
-    gap: 8px; /* Space between icon and text */
-    background-color: #0A66C2; /* Official LinkedIn blue */
-    color: var(--bg-white);
+    gap: 10px;
+    background-color: #0A66C2;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 30px; /* Pill shape */
+    font-weight: 600;
+    transition: background-color 0.2s;
 }
+
 .linkedin-btn:hover {
-    background-color: #004182; /* Darker LinkedIn blue on hover */
-}
-.linkedin-btn i {
-    font-size: 1.25rem;
-    vertical-align: middle;
+    background-color: #3b82f6; /* Lighter blue on hover */
+    color: white;
+    text-decoration: none;
 }
 
 /* --- Reviews Section --- */
@@ -877,16 +902,7 @@ ALL DUPLICATES AFTER THIS HAVE BEEN REMOVED.
         margin-bottom: 2rem; /* Add space below it, before the title */
     }
 }
-/* Responsive: On small screens, stack the button */
-@media (max-width: 576px) {
-    .feedback-btn {
-        position: static; /* Remove absolute positioning */
-        display: block; /* Make it full width */
-        width: 100%;
-        text-align: center;
-        margin-bottom: 2rem; /* Add space below it, before the title */
-    }
-}
+
 /* --- Dark Mode Toggle Switch (Icon in Track Style) --- */
 .theme-switch-wrapper {
     display: flex;
@@ -1138,7 +1154,137 @@ body[data-theme="dark"] .password-wrapper i:hover {
     padding: 12px 28px;
     font-size: 1.1rem;
 }
-/*
-STYLES FOR .my-listing-card ARE NOW HANDLED
-BY THE MAIN SECTION FROM 811-933
-*/
+
+/* --- HORIZONTAL WALL OF LOVE (Left to Right Scroll) --- */
+
+.testimonials-section {
+    width: 100%;
+    overflow: hidden; 
+    position: relative;
+    padding: 60px 0; /* Increased padding */
+    background-color: var(--bg-light); 
+    
+    /* REMOVED: The mask-image that caused the blur artifact */
+}
+
+.testimonials-grid {
+    display: flex !important; /* Creates a horizontal row */
+    width: max-content;       /* Forces container to be as wide as the items */
+    gap: 24px;                /* Space between cards */
+    
+    /* SPEED SETTING: Slower, smoother scroll */
+    animation: scrollRight 30s linear infinite;
+    padding-left: 24px;
+}
+
+/* Pause on hover */
+.testimonials-grid:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+}
+
+.testimonial-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+    width: 350px; 
+    min-width: 350px;
+    margin-bottom: 0; 
+}
+
+/* --- UPDATED CARD STYLES (Fixed to match request) --- */
+
+.testimonial-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color); /* Keeps the subtle border */
+    border-radius: 6px; /* Sharper corners */
+    padding: 24px;      /* Generous padding */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.testimonial-card-link:hover .testimonial-card {
+    transform: translateY(-5px);
+    border-color: var(--secondary-blue);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Font styles */
+.stars { 
+    color: #f59e0b; 
+    font-size: 1rem; 
+    margin-bottom: 16px; 
+}
+
+.testimonial-card blockquote {
+    color: var(--text-light); /* Uses the greyish text color */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    border: none;       /* Removed the blue side border */
+    padding: 0;         /* Removed padding */
+    font-style: normal; /* Text is normal, not italic */
+}
+
+.testimonial-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: none; /* Removed the line separator */
+    padding-top: 0;
+    margin-top: auto;
+}
+
+.testimonial-user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.user-info span {
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+/* --- Password Reset Pages --- */
+
+/* Reuses .auth-page and .auth-container from existing styles */
+
+#forgot-form, 
+#update-password-form {
+    margin-top: 1.5rem;
+}
+
+#forgot-form button,
+#update-password-form button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Optional: Add a back link style for the forgot password page */
+.back-to-login {
+    display: block;
+    margin-top: 1.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.back-to-login:hover {
+    color: var(--secondary-blue);
+    text-decoration: underline;
+}
