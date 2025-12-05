@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Your Business Featured - 2ndhand</title>
+    <title>Get Featured - 2ndhand</title>
     <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,56 +17,69 @@
             <ul class="nav-links">
                 <li><a href="browse.html">Browse</a></li>
                 <li><a href="business.html">Business</a></li>
-                <li><a href="index.html#how-it-works">How it works</a></li>
-                <li><a href="testimonials.html">Testimonials</a></li>
             </ul>
-            <div class="nav-actions"></div>
-            
-            
-
         </nav>
     </header>
 
     <main>
         <section class="simple-form-section" id="featured-page-logic">
-            <div class="form-container">
-                <h2 class="form-title">Get Featured on the Homepage</h2>
-                <p class="form-subtitle">Get a "Pro" spot on our homepage for one month for just ₹30 per month.</p>
-                
-                <p class="form-subtitle" id="feature-spots-left" style="font-weight: 600;"></p>
-                
-                <div class="payment-instructions">
-                    <ol>
-                        <li>
-                            <strong>Step 1: Choose Your Listing</strong>
-                            <p>Select which of your active business listings you want to feature.</p>
-                            <div class="my-listings-grid" id="my-business-listings-container">
+            
+            <div class="payment-card-container">
+                <div class="payment-hero" style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);">
+                    <div class="floating-note-wrapper">
+                        <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/thunder.png" 
+                             alt="Thunder" 
+                             class="currency-note-img" style="width: 80px; transform: rotate(10deg); animation: none;">
+                    </div>
+                    <h2 style="text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Get Featured</h2>
+                    <p style="color: rgba(255,255,255,0.9);">Homepage Spot for <strong>₹40/mo</strong></p>
+                    <p id="feature-spots-left" style="font-size: 0.8rem; margin-top: 5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.2); display: inline-block; padding: 2px 8px; border-radius: 12px;"></p>
+                </div>
+
+                <div class="payment-body">
+                    
+                    <div class="timeline-step">
+                        <div class="step-number" style="color: #d97706; border-color: #d97706;">1</div>
+                        <div class="step-content" style="width: 100%;">
+                            <h4>Select Listing</h4>
+                            <p>Choose the item you want to boost.</p>
+                            <div class="my-listings-grid" id="my-business-listings-container" style="margin-top: 10px; max-height: 200px; border: 1px solid var(--border-color); background: var(--bg-light);">
                                 <div class="loading-spinner"></div>
                             </div>
-                        </li>
-                        <li>
-                            <strong>Step 2: Pay the Fee</strong>
-                            <p>Scan the QR code or use the UPI ID to pay the ₹40 per month feature fee.</p>
-                            <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/our-qr-code.png" alt="Pay with UPI" class="payment-qr">
-                            <p class="upi-id"><strong>UPI ID:</strong> souradeeppradhan7@oksbi</p>
-                        </li>
-                        <li>
-                            <strong>Step 3: Submit for Approval</strong>
-                            <p>After paying, click the button below to submit your payment proof. We will verify and feature your listing within 24 hours.</p>
-                            
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <div class="step-number" style="color: #d97706; border-color: #d97706;">2</div>
+                        <div class="step-content" style="width: 100%;">
+                            <h4>Scan to Pay ₹40</h4>
+                            <div class="qr-box-premium">
+                                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/our-qr-code.png" alt="Pay with UPI">
+                                <div class="upi-tag">souradeeppradhan7@oksbi</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <div class="step-number" style="color: #d97706; border-color: #d97706;">3</div>
+                        <div class="step-content" style="width: 100%;">
+                            <h4>Activate</h4>
                             <a href="https://docs.google.com/forms/d/e/1FAIpQLScsbHBTueV7h-UB5MCz7zY5V_YzKjyWVdW705B9n1_tjl3_Xg/viewform" 
                                target="_blank" 
                                class="btn btn-primary" 
                                id="submit-feature-btn" 
-                               style="width: 100%; text-align: center; margin-top: 10px;">
-                               Select a listing to continue
+                               style="width: 100%; text-align: center; margin-top: 10px; background-color: #d97706;">
+                               Select a listing first
                             </a>
-                        </li>
-                    </ol>
+                        </div>
+                    </div>
+                    
+                    <a href="business.html" class="cancel-link">
+                        <i class='bx bx-left-arrow-alt'></i> Cancel
+                    </a>
                 </div>
-                
-                <a href="business.html" class="btn btn-secondary" style="margin-top: 20px;">Go Back</a>
             </div>
+
         </section>
     </main>
 
