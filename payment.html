@@ -20,59 +20,71 @@
             <ul class="nav-links">
                 <li><a href="browse.html">Browse</a></li>
                 <li><a href="business.html">Business</a></li>
-                <li><a href="index.html#how-it-works">How it works</a></li>
-                <li><a href="testimonials.html">Testimonials</a></li>
             </ul>
-            <div class="nav-actions">
-                
-            </div>
-            
             <div class="theme-switch-wrapper">
                 <label class="theme-switch" for="theme-toggle">
                     <input type="checkbox" id="theme-toggle" />
                     <span class="slider round"></span>
                 </label>
             </div>
-
         </nav>
     </header>
 
     <main>
         <section class="simple-form-section">
-            <div class="form-container">
-                <h2 class="form-title">Post Your Business Listing</h2>
-                <p class="form-subtitle">To post a business listing, please complete a verification fee of **₹50 per month**.</p>
+            <div class="container">
                 
-                <div class="payment-instructions">
-                    <ol>
-                        <li>
-                            <strong>Step 1: Pay the Fee</strong>
-                            <p>Scan the QR code with any UPI app or pay directly to the UPI ID.</p>
-                            
-                            <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/our-qr-code.png" alt="Pay with UPI" class="payment-qr">
-                            
-                            <p class="upi-id"><strong>UPI ID:</strong> souradeeppradhan7@oksbi</p>
-                        </li>
+                <div class="payment-card-container">
+                    <div class="payment-hero">
+                        <div class="floating-note-wrapper">
+                            <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/50-rupee-note.png" 
+                                 alt="₹50 Note" 
+                                 class="currency-note-img">
+                        </div>
+                        <h2>One-Time Verification</h2>
+                        <p>Unlock Unlimited Business Listings</p>
+                    </div>
+        
+                    <div class="payment-body">
                         
-                        <li>
-                            <strong>Step 2: Get Verified</strong>
-                            <p>
-                                After paying, click the button below to submit your payment screenshot and registered email address.
-                            </p>
-                            <a href="https://forms.gle/pUAAAE2dsw1XExQb9" target="_blank" class="btn btn-primary" style="margin-top: 10px; width: 100%; text-align: center;">
-                                <i class='bx bx-check-square' style="vertical-align: middle; margin-right: 5px;"></i>
-                                Submit Payment Details
-                            </a>
-                        </li>
-                        
-                        <li>
-                            <strong>Step 3: Wait for Activation</strong>
-                            <p>Your account will be manually activated within 24 hours. Once activated, the "Create Your Business Listing" button will be unlocked.</p>
-                        </li>
-                    </ol>
+                        <div class="timeline-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Scan to Pay ₹50</h4>
+                                <p>Use Paytm, PhonePe, or GPay.</p>
+                                <div class="qr-box-premium">
+                                    <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/our-qr-code.png" alt="QR Code">
+                                    <div class="upi-tag">souradeeppradhan7@oksbi</div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="timeline-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Verify Payment</h4>
+                                <p>We need a screenshot to match your payment.</p>
+                                <a href="https://forms.gle/pUAAAE2dsw1XExQb9" target="_blank" class="btn btn-primary" style="width: 100%; text-align: center;">
+                                    <i class='bx bx-upload' style="margin-right:5px;"></i> Upload Screenshot
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="timeline-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Activation</h4>
+                                <p>Your "Create Business Listing" button will unlock automatically within 24 hours.</p>
+                            </div>
+                        </div>
+        
+                        <a href="business.html" class="cancel-link">
+                            <i class='bx bx-left-arrow-alt'></i> Cancel and Go Back
+                        </a>
+        
+                    </div>
                 </div>
-                
-                <a href="business.html" class="btn btn-secondary" style="margin-top: 20px;">Go Back</a>
+        
             </div>
         </section>
     </main>
