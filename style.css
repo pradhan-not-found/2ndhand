@@ -35,31 +35,12 @@ a:hover { text-decoration: underline; }
 .main-header { padding: 1rem 5%; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; }
 .main-header-static { position: static; background-color: var(--bg-white); backdrop-filter: none; }
 
-.navbar { 
-    display: flex; 
-    align-items: center; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-}
-
+.navbar { display: flex; align-items: center; max-width: 1200px; margin: 0 auto; }
 .logo { display: flex; align-items: center; text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 1.5rem; }
 .logo img { height: 40px; margin-right: 0.5rem; }
-
-.nav-links { 
-    display: flex; 
-    list-style: none; 
-    gap: 2.5rem; 
-    margin-left: 2.5rem;  /* Creates a gap after your logo */
-    margin-right: auto;   /* Pushes all other items to the right */
-}
-
+.nav-links { display: flex; list-style: none; gap: 2.5rem; margin-left: 2.5rem; margin-right: auto; }
 .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; }
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem; /* CHANGED: Increased from 1rem to 1.5rem */
-    min-height: 44px;
-}
+.nav-actions { display: flex; align-items: center; gap: 1.5rem; min-height: 44px; }
 .nav-actions .login-btn { text-decoration: none; color: var(--text-dark); font-weight: 500; }
 .nav-actions .sell-btn { padding: 10px 20px; }
 .nav-actions i { font-size: 1.5rem; color: var(--text-dark); }
@@ -88,108 +69,23 @@ a:hover { text-decoration: underline; }
 .browse-all-container { text-align: center; }
 
 /* --- Listings Grid & Product Card --- */
-.listing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-.product-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-.product-card-link:hover {
-    text-decoration: none;
-}
-.product-card {
-    background: var(--bg-white);
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-}
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-.product-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: contain;
-    display: block;
-}
-.product-info {
-    padding: 1rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-.product-info h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    flex-grow: 1; /* Allows h3 to push footer down */
-}
-.price {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary-green);
-    margin-bottom: 1rem;
-}
-.product-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto; /* Pushes footer to bottom */
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
-}
-.seller-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.seller-info img {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.seller-info span {
-    font-size: 0.875rem;
-    color: var(--text-light);
-}
-.add-to-cart-btn { /* Style for the text span */
-    color: var(--secondary-blue);
-    font-weight: 500;
-    text-decoration: none;
-    font-size: 0.875rem;
-}
-.add-to-cart-btn i {
-    vertical-align: middle;
-    margin-right: 0.25rem;
-}
-/* Style for the button specifically if needed */
-button.btn-add-to-cart {
-    background: none;
-    border: none;
-    color: var(--secondary-blue);
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
-    font-size: 0.9rem;  /* UPDATED: Was 0.875rem */
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;       /* ADDED: A nice space */
-}
-
-button.btn-add-to-cart i {
-    font-size: 0.9rem;  /* UPDATED: Was 1.1rem (to match text) */
-    margin-right: 0;  /* REMOVED: Replaced by 'gap' */
-}
+.listing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.product-card-link { text-decoration: none; color: inherit; display: block; }
+.product-card-link:hover { text-decoration: none; }
+.product-card { background: var(--bg-white); border: none; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.product-card img { width: 100%; height: 200px; object-fit: contain; display: block; }
+.product-info { padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; }
+.product-info h3 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600; flex-grow: 1; }
+.price { font-size: 1.1rem; font-weight: 600; color: var(--primary-green); margin-bottom: 1rem; }
+.product-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 1rem; }
+.seller-info { display: flex; align-items: center; gap: 0.5rem; }
+.seller-info img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+.seller-info span { font-size: 0.875rem; color: var(--text-light); }
+.add-to-cart-btn { color: var(--secondary-blue); font-weight: 500; text-decoration: none; font-size: 0.875rem; }
+.add-to-cart-btn i { vertical-align: middle; margin-right: 0.25rem; }
+button.btn-add-to-cart { background: none; border: none; color: var(--secondary-blue); font-weight: 600; cursor: pointer; padding: 0; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.35rem; }
+button.btn-add-to-cart i { font-size: 0.9rem; margin-right: 0; }
 
 /* --- How It Works Section --- */
 .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
@@ -197,8 +93,7 @@ button.btn-add-to-cart i {
 .how-it-works-card i { font-size: 3rem; color: var(--secondary-blue); margin-bottom: 1rem; display: inline-block; background-color: #eef2ff; padding: 1rem; border-radius: 50%; }
 .how-it-works-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
 
-/* --- Testimonials Section (Base styles) --- */
-/* Note: The main scrolling styles are at the bottom of the file */
+/* --- Testimonials Section --- */
 .testimonial-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; }
 .stars { color: #f59e0b; font-size: 1.25rem; margin-bottom: 1rem; }
 .testimonial-card blockquote { color: var(--text-light); font-style: italic; border-left: 3px solid var(--secondary-blue); padding-left: 1rem; margin-bottom: 1.5rem; }
@@ -206,7 +101,7 @@ button.btn-add-to-cart i {
 .testimonial-user img { width: 48px; height: 48px; border-radius: 50%; }
 .user-info span { color: var(--text-light); font-size: 0.875rem; }
 
-/* --- Auth Pages (Login/Sign Up) --- */
+/* --- Auth Pages --- */
 .auth-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-light); padding: 1rem; }
 .auth-container { background: var(--bg-white); padding: 2.5rem; border-radius: 12px; box-shadow: var(--shadow); width: 100%; max-width: 400px; text-align: center; }
 .auth-container .logo { justify-content: center; margin-bottom: 1.5rem; }
@@ -224,7 +119,7 @@ button.btn-add-to-cart i {
 .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-white); box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom: 1rem; }
 .btn-avatar-upload { cursor: pointer; color: var(--secondary-blue); font-weight: 500; }
 #email[disabled] { background-color: #f3f4f6; cursor: not-allowed; }
-.profile-form hr { border: none; border-top: 1px solid var(--border-color); margin: 2rem 0; } /* Added divider */
+.profile-form hr { border: none; border-top: 1px solid var(--border-color); margin: 2rem 0; } 
 .profile-form button { width: 100%; margin-top: 1rem; }
 
 /* --- Sell Page --- */
@@ -265,11 +160,7 @@ button.btn-add-to-cart i {
 @media (max-width: 768px) { .product-detail-layout { grid-template-columns: 1fr; } }
 
 /* --- Browse Page Redesign --- */
-.browse-page-header {
-    text-align: center;
-    padding: 2rem 1rem 2rem;
-    background-color: var(--bg-white);
-}
+.browse-page-header { text-align: center; padding: 2rem 1rem 2rem; background-color: var(--bg-white); }
 .browse-search-bar { position: relative; max-width: 600px; margin: 2rem auto 0; }
 .browse-search-bar i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-light); }
 .browse-search-bar input { width: 100%; padding: 14px 14px 14px 50px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--bg-white); }
@@ -321,1061 +212,340 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance
 .link-column h4 { color: var(--bg-white); font-weight: 600; margin-bottom: 1rem; }
 .link-column ul { list-style: none; }
 .link-column li { margin-bottom: 0.5rem; }
-
-/* Updated link color */
-.link-column a {
-    color: #d1d5db; /* Changed to light gray */
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-/* Updated link hover color */
-.link-column a:hover {
-    color: var(--primary-green); /* Changed to green */
-    text-decoration: none;
-}
-
+.link-column a { color: #d1d5db; text-decoration: none; transition: color 0.2s; }
+.link-column a:hover { color: var(--primary-green); text-decoration: none; }
 .social-icons { display: flex; gap: 1rem; }
-
-/* Updated icon color */
-.social-icons a {
-    color: #d1d5db; /* Changed to light gray */
-    font-size: 1.5rem;
-    transition: color 0.2s; /* Added transition */
-}
-
-/* Updated icon hover color */
-.social-icons a:hover {
-    color: var(--primary-green); /* Changed to green */
-    text-decoration: none;
-}
-
+.social-icons a { color: #d1d5db; font-size: 1.5rem; transition: color 0.2s; }
+.social-icons a:hover { color: var(--primary-green); text-decoration: none; }
 .footer-bottom { border-top: 1px solid #374151; padding: 1.5rem 0; text-align: center; color: #9ca3af; }
+
 /* --- Custom rule for Featured Listings on homepage --- */
-.featured-listings-section .listing-grid {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-/* Makes the 4-column layout scrollable on smaller screens */
+.featured-listings-section .listing-grid { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 992px) {
-    .featured-listings-section .listing-grid {
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 80%;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-    .featured-listings-section .listing-grid > * {
-        scroll-snap-align: start;
-    }
+    .featured-listings-section .listing-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 80%; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1rem; gap: 1.5rem; }
+    .featured-listings-section .listing-grid > * { scroll-snap-align: start; }
 }
 
-/* --- Creator Spotlight (Redesigned to match Screenshot) --- */
-
-.creator-spotlight {
-    text-align: center;
-    margin: 6rem auto 2rem auto; /* Spacing from testimonials */
-    padding: 4rem 2rem;
-    
-    /* Dark Theme Styles from Screenshot */
-    background-color: #111827; /* Dark Blue/Black background */
-    border-radius: 24px;       /* Smooth rounded corners */
-    color: #ffffff;            /* White text */
-    
-    /* Shadow and Border */
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    
-    position: relative;
-    overflow: hidden;
-    max-width: 900px; /* Limits width so it doesn't stretch too far */
-}
-
-/* Fix for the creator avatar to be sharp */
-.creator-avatar {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1.5rem;
-    border: 4px solid rgba(255, 255, 255, 0.1); /* Subtle ring around photo */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-}
-
-/* Override text colors specifically for this dark section */
-.creator-spotlight .section-title {
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-    font-size: 2rem;
-}
-
-.creator-spotlight h3 {
-    color: #ffffff;
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.creator-spotlight .creator-bio {
-    color: #d1d5db; /* Light gray for readability on dark bg */
-    max-width: 500px;
-    margin: 0 auto 2.5rem auto;
-    line-height: 1.7;
-    font-size: 1.1rem;
-}
-
-/* Update LinkedIn Button to pop on dark background */
-.linkedin-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #0A66C2;
-    color: white;
-    padding: 12px 28px;
-    border-radius: 30px; /* Pill shape */
-    font-weight: 600;
-    transition: background-color 0.2s;
-}
-
-.linkedin-btn:hover {
-    background-color: #3b82f6; /* Lighter blue on hover */
-    color: white;
-    text-decoration: none;
-}
+/* --- Creator Spotlight --- */
+.creator-spotlight { text-align: center; margin: 6rem auto 2rem auto; padding: 4rem 2rem; background-color: #111827; border-radius: 24px; color: #ffffff; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden; max-width: 900px; }
+.creator-avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; border: 4px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5); }
+.creator-spotlight .section-title { color: #ffffff; margin-bottom: 0.5rem; font-size: 2rem; }
+.creator-spotlight h3 { color: #ffffff; font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+.creator-spotlight .creator-bio { color: #d1d5db; max-width: 500px; margin: 0 auto 2.5rem auto; line-height: 1.7; font-size: 1.1rem; }
+.linkedin-btn { display: inline-flex; align-items: center; gap: 10px; background-color: #0A66C2; color: white; padding: 12px 28px; border-radius: 30px; font-weight: 600; transition: background-color 0.2s; }
+.linkedin-btn:hover { background-color: #3b82f6; color: white; text-decoration: none; }
 
 /* --- Reviews Section --- */
-.reviews-section {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    border-top: 1px solid var(--border-color);
-}
-.reviews-section h2 {
-    font-size: 1.75rem;
-    margin-bottom: 2rem;
-}
-#review-form-container {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
-}
-.review-card {
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem 0;
-}
-.review-card:last-child {
-    border-bottom: none;
-}
-.review-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-.review-header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.review-meta strong {
-    display: block;
-}
-.review-meta .stars {
-    color: #f59e0b;
-}
-.review-comment {
-    color: var(--text-light);
-}
-
-/* Star Rating Input */
-.star-rating {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    font-size: 2rem;
-}
+.reviews-section { padding-top: 4rem; padding-bottom: 4rem; border-top: 1px solid var(--border-color); }
+.reviews-section h2 { font-size: 1.75rem; margin-bottom: 2rem; }
+#review-form-container { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color); }
+.review-card { border-bottom: 1px solid var(--border-color); padding: 1.5rem 0; }
+.review-card:last-child { border-bottom: none; }
+.review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.review-header img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.review-meta strong { display: block; }
+.review-meta .stars { color: #f59e0b; }
+.review-comment { color: var(--text-light); }
+.star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; font-size: 2rem; }
 .star-rating input { display: none; }
-.star-rating label {
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.star-rating input:checked ~ label,
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: #f59e0b;
-}
-/* --- Review Image Uploads & Display --- */
-.review-images {
-    display: flex;
-    gap: 10px;
-    margin-top: 1rem;
-}
-.review-images img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
+.star-rating label { color: #ccc; cursor: pointer; transition: color 0.2s; }
+.star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: #f59e0b; }
+.review-images { display: flex; gap: 10px; margin-top: 1rem; }
+.review-images img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
 
-/* ADDED: Styles for the new Homepage Search Form */
-.hero-search-form {
-    display: flex; /* Arrange items horizontally */
-    align-items: center; /* Vertically align items */
-    gap: 10px; /* Space between items */
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-width: 700px; /* Adjust as needed */
-    margin: 20px auto 0; /* Center the form below other hero content */
-}
-
-.hero-search {
-    flex-grow: 1; /* Allow the search input area to take up available space */
-    position: relative; /* Needed for positioning the icon */
-    display: flex;
-    align-items: center;
-}
-
-.hero-search i {
-    position: absolute;
-    left: 15px; /* Position icon inside the input */
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-}
-
-.hero-search input[type="text"] {
-    width: 100%;
-    padding: 10px 10px 10px 40px; /* Add padding for the icon */
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box; /* Include padding and border in width */
-}
-.hero-search input[type="text"]:focus { 
-    outline: 2px solid var(--secondary-blue); 
-    border-color: transparent; 
-}
-
-.hero-category-select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #fff;
-    cursor: pointer;
-    min-width: 150px; /* Give dropdown some minimum width */
-}
-
-.hero-search-btn {
-    padding: 10px 20px; /* Adjust padding for button size */
-    flex-shrink: 0; /* Prevent button from shrinking */
-}
-/* --- Payment Page Styles --- */
-.simple-form-section {
-    padding-top: 4rem; /* Adjust if header height changes */
-    padding-bottom: 4rem;
-}
-
-.form-container {
-    background: var(--bg-white);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 600px; /* Adjust width as needed */
-    margin: 2rem auto;
-    text-align: center;
-}
-
-.form-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.form-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-light);
-    margin-bottom: 2rem;
-}
-
-.payment-instructions {
-    text-align: left; /* Align instruction text to the left */
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background-color: var(--bg-light);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-}
-
-.payment-instructions ol {
-    padding-left: 20px; /* Indent the list */
-    list-style-type: decimal; /* Use numbers for steps */
-}
-
-.payment-instructions li {
-    margin-bottom: 1.5rem;
-}
-.payment-instructions li:last-child {
-    margin-bottom: 0;
-}
-
-
-.payment-instructions strong {
-    font-weight: 600;
-    display: block; /* Make step title take its own line */
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.payment-instructions p {
-    color: var(--text-light);
-    margin-bottom: 0.75rem;
-    line-height: 1.7;
-}
-
-.payment-qr {
-    display: block; /* Make QR code a block element */
-    max-width: 200px; /* Limit QR code size */
-    height: auto;
-    margin: 1rem auto; /* Center the QR code */
-    border: 1px solid var(--border-color);
-    padding: 5px;
-    background-color: var(--bg-white);
-}
-
-.upi-id {
-    font-weight: 500;
-    color: var(--text-dark);
-    text-align: center; /* Center UPI ID */
-    margin-top: 1rem;
-}
-
-/* Specific style for email/UPI ID text to stand out */
-.upi-id strong {
-    display: inline; /* Keep label and value on same line */
-    font-weight: 600;
-}
-
-.form-container .btn-secondary {
-    margin-top: 2rem; /* Add space above the Go Back button */
-    display: inline-block; /* Allow centering */
-}
-
-/* ---
-THIS IS THE START OF THE *CORRECT* PROFILE LISTING STYLES.
-ALL DUPLICATES AFTER THIS HAVE BEEN REMOVED.
---- */
+/* --- Homepage Search Form --- */
+.hero-search-form { display: flex; align-items: center; gap: 10px; background-color: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); max-width: 700px; margin: 20px auto 0; }
+.hero-search { flex-grow: 1; position: relative; display: flex; align-items: center; }
+.hero-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+.hero-search input[type="text"] { width: 100%; padding: 10px 10px 10px 40px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+.hero-search input[type="text"]:focus { outline: 2px solid var(--secondary-blue); border-color: transparent; }
+.hero-category-select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; background-color: #fff; cursor: pointer; min-width: 150px; }
+.hero-search-btn { padding: 10px 20px; flex-shrink: 0; }
 
 /* --- My Listings (Profile Page) --- */
-.my-listings-section {
-    max-width: 800px; /* Can be wider than the profile form */
-    margin: 3rem auto 4rem auto;
-    padding: 0 1rem;
-}
-
-#my-listings-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-/* This is the card for each item */
-.my-listing-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: var(--bg-white);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-}
-
-.my-listing-card img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-.my-listing-info {
-    flex-grow: 1; /* Takes up available space */
-    overflow: hidden; /* Prevents long text from breaking layout */
-}
-
-.my-listing-info h3 {
-    font-weight: 600;
-    font-size: 1.1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.my-listing-info p {
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
-
-.my-listing-info .price {
-    font-weight: 600;
-    color: var(--primary-green);
-    font-size: 1rem;
-}
-
-/* This is the "Mark as Sold" button */
-.btn-sold {
-    background-color: #ef4444; /* Red color */
-    color: white;
-    padding: 8px 12px;
-    font-size: 0.875rem;
-    flex-shrink: 0; /* Prevents button from shrinking */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-.btn-sold:hover {
-    background-color: #dc2626; /* Darker red */
-    transform: translateY(-2px);
-}
+.my-listings-section { max-width: 800px; margin: 3rem auto 4rem auto; padding: 0 1rem; }
+#my-listings-container { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+.my-listing-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background-color: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow); }
+.my-listing-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.my-listing-info { flex-grow: 1; overflow: hidden; }
+.my-listing-info h3 { font-weight: 600; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.my-listing-info p { font-size: 0.9rem; color: var(--text-light); }
+.my-listing-info .price { font-weight: 600; color: var(--primary-green); font-size: 1rem; }
+.btn-sold { background-color: #ef4444; color: white; padding: 8px 12px; font-size: 0.875rem; flex-shrink: 0; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-sold:hover { background-color: #dc2626; transform: translateY(-2px); }
 
 /* --- Profile Page 2-Column Layout --- */
-.profile-section {
-    max-width: 1200px; /* Widen the container to fit two columns */
-    margin: 4rem auto;
-}
-
-.profile-layout-container {
-    display: grid;
-    /* First column is 1fr, second is 1.5fr (a bit wider) */
-    grid-template-columns: 1fr 1.5fr; 
-    gap: 2rem;
-    align-items: start; /* Align tops of columns */
-    margin-top: 2rem;
-}
-
-/* The left column (form) already has styles via .profile-form */
-.profile-details-column {
-    /* We can leave this empty, .profile-form styles it */
-}
-
-/* Style for the right column (listings) to match the form */
-.profile-listings-column {
-    background: var(--bg-white);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    /* Make the column sticky, so it stays when you scroll */
-    position: sticky; 
-    top: 100px; 
-}
-
-/* Remove extra margin from the original listings section */
-.my-listings-section {
-    margin-top: 0;
-}
-
-/* Align text in the listings column to the left */
-.profile-listings-column .form-title,
-.profile-listings-column .form-subtitle {
-    text-align: left;
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 100%;
-}
-
-/* Make listings container scrollable if it gets too long */
-#my-listings-container {
-    max-height: 60vh; /* Set a max height (e.g., 60% of viewport) */
-    overflow-y: auto; /* Add a scrollbar if content overflows */
-    padding-right: 10px; /* Space for scrollbar */
-    margin-top: 2rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--secondary-blue) var(--bg-light);
-}
-#my-listings-container::-webkit-scrollbar { 
-    width: 8px; 
-}
-#my-listings-container::-webkit-scrollbar-track { 
-    background: var(--bg-light); 
-    border-radius: 10px; 
-}
-#my-listings-container::-webkit-scrollbar-thumb { 
-    background-color: var(--secondary-blue); 
-    border-radius: 10px; 
-    border: 2px solid var(--bg-light); 
-}
-
-
-/* --- Responsive stacking for profile page --- */
+.profile-section { max-width: 1200px; margin: 4rem auto; }
+.profile-layout-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 2rem; align-items: start; margin-top: 2rem; }
+.profile-listings-column { background: var(--bg-white); padding: 2.5rem; border-radius: 12px; box-shadow: var(--shadow); position: sticky; top: 100px; }
+.my-listings-section { margin-top: 0; }
+.profile-listings-column .form-title, .profile-listings-column .form-subtitle { text-align: left; margin-left: 0; margin-right: 0; max-width: 100%; }
+#my-listings-container { max-height: 60vh; overflow-y: auto; padding-right: 10px; margin-top: 2rem; scrollbar-width: thin; scrollbar-color: var(--secondary-blue) var(--bg-light); }
+#my-listings-container::-webkit-scrollbar { width: 8px; }
+#my-listings-container::-webkit-scrollbar-track { background: var(--bg-light); border-radius: 10px; }
+#my-listings-container::-webkit-scrollbar-thumb { background-color: var(--secondary-blue); border-radius: 10px; border: 2px solid var(--bg-light); }
 @media (max-width: 992px) {
-    .profile-layout-container {
-        grid-template-columns: 1fr; /* Stack columns on top of each other */
-    }
-    .profile-listings-column {
-        position: static; /* Don't be sticky on mobile */
-        max-height: none; /* Remove height limit */
-        margin-top: 2rem; /* Add space between stacked items */
-    }
-    #my-listings-container {
-         max-height: none; /* Remove height limit */
-         overflow-y: visible; /* Don't scroll */
-    }
-}
-/* --- Makes Testimonial Cards Clickable --- */
-.testimonial-card-link {
-    text-decoration: none;  /* Removes underline */
-    color: inherit;         /* Uses the card's text color */
-    display: block;         /* Makes the link fill the grid space */
+    .profile-layout-container { grid-template-columns: 1fr; }
+    .profile-listings-column { position: static; max-height: none; margin-top: 2rem; }
+    #my-listings-container { max-height: none; overflow-y: visible; }
 }
 
-.testimonial-card-link .testimonial-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-    height: 100%; /* Ensures the card fills the link wrapper */
-}
+/* --- Testimonial Clickable & Feedback --- */
+.testimonial-card-link { text-decoration: none; color: inherit; display: block; }
+.testimonial-card-link .testimonial-card { transition: transform 0.2s, box-shadow 0.2s; height: 100%; }
+.testimonial-card-link:hover .testimonial-card { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.testimonial-card-link:hover { text-decoration: none; }
+.user-info strong { display: block; }
+.testimonials-section .container { position: relative; }
+.feedback-btn { position: absolute; top: 0; right: 1rem; background-color: var(--secondary-blue); color: var(--bg-white); border: none; padding: 8px 16px; font-size: 0.875rem; font-weight: 600; border-radius: 8px; text-decoration: none; transition: all 0.2s; z-index: 10; }
+.feedback-btn i { margin-right: 6px; }
+.feedback-btn:hover { background-color: #3b50de; color: var(--bg-white); box-shadow: var(--shadow); transform: translateY(-2px); text-decoration: none; }
+@media (max-width: 576px) { .feedback-btn { position: static; display: block; width: 100%; text-align: center; margin-bottom: 2rem; } }
 
-/* This applies the hover effect when you hover the link */
-.testimonial-card-link:hover .testimonial-card {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
+/* --- Dark Mode Switch --- */
+.theme-switch-wrapper { display: flex; align-items: right; margin-left: 4.5rem; }
+.theme-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'%3E%3C/circle%3E%3Cline x1='12' y1='1' x2='12' y2='3'%3E%3C/line%3E%3Cline x1='12' y1='21' x2='12' y2='23'%3E%3C/line%3E%3Cline x1='4.22' y1='4.22' x2='5.64' y2='5.64'%3E%3C/line%3E%3Cline x1='18.36' y1='18.36' x2='19.78' y2='19.78'%3E%3C/line%3E%3Cline x1='1' y1='12' x2='3' y2='12'%3E%3C/line%3E%3Cline x1='21' y1='12' x2='23' y2='12'%3E%3C/line%3E%3Cline x1='4.22' y1='19.78' x2='5.64' y2='18.36'%3E%3C/line%3E%3Cline x1='18.36' y1='5.64' x2='19.78' y2='4.22'%3E%3C/line%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 7px 7px; background-size: 20px 20px; }
+.slider:after { content: ""; position: absolute; height: 100%; width: 100%; top: 0; left: 0; z-index: 1; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 37px 9px; background-size: 16px 16px; opacity: 0.7; }
+.slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: .4s; border-radius: 50%; z-index: 2; }
+input:checked + .slider { background-color: #374151; }
+input:checked + .slider:before { transform: translateX(26px); }
+.slider.round { border-radius: 34px; }
 
-.testimonial-card-link:hover {
-    text-decoration: none; /* Keeps it underline-free on hover */
-}
-/* --- Testimonial Card Name Fix --- */
-.user-info strong {
-    display: block; /* Forces the name to take its own line */
-}
+/* --- Dark Mode Theme --- */
+body[data-theme="dark"] { --text-dark: #f9fafb; --text-light: #9ca3af; --bg-white: #111827; --bg-light: #1f2937; --border-color: #374151; --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.4); }
+body[data-theme="dark"] .main-header { background-color: rgba(31, 41, 55, 0.8); border-bottom-color: var(--border-color); }
+body[data-theme="dark"] .main-header-static { background-color: var(--bg-light); }
+body[data-theme="dark"] .hero-search-form { background-color: var(--bg-light); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+body[data-theme="dark"] .hero-search input[type="text"] { background-color: var(--bg-white); border-color: var(--border-color); color: var(--text-dark); }
+body[data-theme="dark"] .hero-search i { color: var(--text-light); }
+body[data-theme="dark"] .browse-search-bar input { background-color: var(--bg-light); border-color: var(--border-color); color: var(--text-dark); }
+body[data-theme="dark"] .footer-brand .logo { color: var(--bg-light); }
+body[data-theme="dark"] .star-rating label { color: var(--border-color); }
+body[data-theme="dark"] .star-rating input:checked ~ label, body[data-theme="dark"] .star-rating label:hover, body[data-theme="dark"] .star-rating label:hover ~ label { color: #f59e0b; }
 
-/* --- Feedback Button (Blue) --- */
-.testimonials-section .container {
-    position: relative; /* This is the anchor for the button */
-}
+/* --- Feature Select & Password & Load More --- */
+.my-listings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; max-height: 400px; overflow-y: auto; padding: 1rem; background-color: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; }
+.feature-select-card { border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.feature-select-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.feature-select-card img { width: 100%; height: 100px; object-fit: cover; }
+.feature-select-card h4 { font-size: 0.9rem; font-weight: 600; padding: 0.75rem; text-align: center; }
+.feature-select-card.selected { border-color: var(--secondary-blue); box-shadow: var(--shadow-lg); background-color: #eef2ff; }
+body[data-theme="dark"] .feature-select-card.selected { background-color: #374151; }
+#submit-feature-btn.disabled { background-color: var(--text-light); cursor: not-allowed; opacity: 0.7; }
+#submit-feature-btn.disabled:hover { transform: none; }
+.password-wrapper { position: relative; }
+.password-wrapper i { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); font-size: 1.25rem; color: var(--text-light); cursor: pointer; transition: color 0.2s; }
+.password-wrapper i:hover { color: var(--text-dark); }
+.password-wrapper input { padding-right: 45px !important; }
+body[data-theme="dark"] .password-wrapper i:hover { color: var(--text-dark); }
+.load-more-container { text-align: center; padding: 2rem; }
+.load-more-btn { display: none; padding: 12px 28px; font-size: 1.1rem; }
 
-.feedback-btn {
-    position: absolute;
-    top: 0; /* Aligns to the top of the container's content area */
-    right: 1rem; /* Aligns with the container's right padding */
-    
-    /* Button styling (Updated to be blue) */
-    background-color: var(--secondary-blue); /* Changed to blue */
-    color: var(--bg-white); /* Changed to white */
-    border: none; /* Removed border */
-    padding: 8px 16px;
-    font-size: 0.875rem;
-    font-weight: 600; /* Made text a bit bolder */
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.2s;
-    z-index: 10; /* Ensures it's above other elements */
-}
+/* --- Wall of Love Scroll --- */
+.testimonials-section { width: 100%; overflow: hidden; position: relative; padding: 60px 0; background-color: var(--bg-light); }
+.testimonials-grid { display: flex !important; width: max-content; gap: 24px; animation: scrollRight 30s linear infinite; padding-left: 24px; }
+.testimonials-grid:hover { animation-play-state: paused; }
+@keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+.testimonial-card-link { text-decoration: none; color: inherit; display: inline-block; width: 350px; min-width: 350px; margin-bottom: 0; }
 
-.feedback-btn i {
-    margin-right: 6px; /* Space between icon and text */
-}
+/* --- Password Reset --- */
+#forgot-form, #update-password-form { margin-top: 1.5rem; }
+#forgot-form button, #update-password-form button { width: 100%; margin-top: 1rem; }
+.back-to-login { display: block; margin-top: 1.5rem; color: var(--text-light); font-size: 0.9rem; text-decoration: none; }
+.back-to-login:hover { color: var(--secondary-blue); text-decoration: underline; }
 
-.feedback-btn:hover {
-    background-color: #3b50de; /* Darker blue (from btn-secondary:hover) */
-    color: var(--bg-white);
-    box-shadow: var(--shadow);
-    transform: translateY(-2px);
-    text-decoration: none;
-}
+/* --- PREMIUM FEATURED BADGES --- */
+.featured-listings-section { position: relative; background: linear-gradient(to bottom, var(--bg-light), #fffbeb) !important; }
+body[data-theme="dark"] .featured-listings-section { background: linear-gradient(to bottom, var(--bg-light), #312e1a) !important; }
+.featured-listings-section .product-card { border: 2px solid #FFD600 !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; position: relative !important; overflow: visible !important; z-index: 1; background: var(--bg-white); }
+.featured-listings-section .product-card::before { content: "FEATURED"; position: absolute; top: -14px; right: 12px; z-index: 99; display: flex; align-items: center; justify-content: center; background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/thunder.png'); background-repeat: no-repeat; background-size: 16px auto; background-position: 8px center; padding: 6px 12px 6px 32px; background-color: #222222 !important; border: 2px solid #FFD600 !important; color: #FFD600 !important; border-radius: 6px !important; font-size: 0.75rem !important; font-weight: 800 !important; letter-spacing: 1px; font-family: sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+.featured-listings-section .seller-info span::after { content: ""; display: inline-block; width: 18px; height: 18px; margin-left: 6px; vertical-align: text-bottom; background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/verified.png'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent !important; border-radius: 0; }
+.featured-listings-section .price { color: #eab308 !important; font-weight: 800 !important; font-size: 1.25rem !important; }
+body[data-theme="dark"] .featured-listings-section .price { color: #FFD600 !important; }
+@media (max-width: 768px) { .featured-listings-section .product-card { margin-top: 20px !important; } .featured-listings-section .product-card::before { font-size: 0.65rem !important; padding: 5px 10px 5px 26px; background-size: 12px auto; background-position: 8px center; right: 8px; top: -12px; } .featured-listings-section .price { font-size: 1.1rem !important; } }
 
-/* Responsive: On small screens, stack the button */
-@media (max-width: 576px) {
-    .feedback-btn {
-        position: static; /* Remove absolute positioning */
-        display: block; /* Make it full width */
-        width: 100%;
-        text-align: center;
-        margin-bottom: 2rem; /* Add space below it, before the title */
-    }
-}
+/* --- PREMIUM PAYMENT STYLES (NEW) --- */
 
-/* --- Dark Mode Toggle Switch (Icon in Track Style) --- */
-.theme-switch-wrapper {
-    display: flex;
-    align-items: right;
-    margin-left: 4.5rem; /* CHANGED: Increased from 1rem to 1.5rem */
-}
-
-.theme-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;  /* Width of the switch */
-    height: 34px;
-}
-
-.theme-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* The slider track */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc; /* Light mode track color */
-    transition: .4s;
-    border-radius: 34px;
-    
-    /* Sun Icon (built with CSS) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='5'%3E%3C/circle%3E%3Cline x1='12' y1='1' x2='12' y2='3'%3E%3C/line%3E%3Cline x1='12' y1='21' x2='12' y2='23'%3E%3C/line%3E%3Cline x1='4.22' y1='4.22' x2='5.64' y2='5.64'%3E%3C/line%3E%3Cline x1='18.36' y1='18.36' x2='19.78' y2='19.78'%3E%3C/line%3E%3Cline x1='1' y1='12' x2='3' y2='12'%3E%3C/line%3E%3Cline x1='21' y1='12' x2='23' y2='12'%3E%3C/line%3E%3Cline x1='4.22' y1='19.78' x2='5.64' y2='18.36'%3E%3C/line%3E%3Cline x1='18.36' y1='5.64' x2='19.78' y2='4.22'%3E%3C/line%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 7px 7px; /* Position Sun on the left */
-    background-size: 20px 20px;
-}
-
-/* Moon Icon (on the ::after pseudo-element) */
-.slider:after {
-    content: "";
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1; /* Sits below the thumb */
-    
-    /* Moon Icon (built with CSS) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 37px 9px; /* Position Moon on the right */
-    background-size: 16px 16px;
-    opacity: 0.7; /* Dimmed icon, like in your image */
-}
-
-/* The moving thumb (circle) */
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white; /* Thumb is white */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    transition: .4s;
-    border-radius: 50%;
-    z-index: 2; /* Thumb is on top of icons */
-}
-
-input:checked + .slider {
-    background-color: #374151; /* Dark mode track color */
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px); /* Moves the thumb to the right */
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-
-/* --- Dark Mode Theme Definitions --- */
-/* We use body[data-theme="dark"] to apply these styles */
-
-body[data-theme="dark"] {
-    /* This is the magic. We just redefine your root variables.
-    All your existing CSS that uses these variables will update.
-    */
-    --text-dark: #f9fafb;      /* Light gray (was black) */
-    --text-light: #9ca3af;     /* Lighter gray (was dark gray) */
-    --bg-white: #111827;      /* Darkest blue (was white) */
-    --bg-light: #1f2937;      /* Dark blue (was light gray) */
-    --border-color: #374151;   /* Dark border (was light border) */
-    --shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.4);
-}
-
-/* --- Dark Mode Specific Fixes --- */
-
-/* 1. Fix the header (it had a hard-coded light background) */
-body[data-theme="dark"] .main-header {
-    background-color: rgba(31, 41, 55, 0.8); /* Dark background (from --bg-light) */
-    border-bottom-color: var(--border-color);
-}
-body[data-theme="dark"] .main-header-static {
-    background-color: var(--bg-light);
-}
-
-/* 2. Fix the homepage search bar (hard-coded light colors) */
-body[data-theme="dark"] .hero-search-form {
-    background-color: var(--bg-light);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-body[data-theme="dark"] .hero-search input[type="text"] {
-    background-color: var(--bg-white);
-    border-color: var(--border-color);
-    color: var(--text-dark); /* Makes text light */
-}
-body[data-theme="dark"] .hero-search i {
-    color: var(--text-light);
-}
-
-/* 3. Fix the Browse page search bar */
-body[data-theme="dark"] .browse-search-bar input {
-    background-color: var(--bg-light);
-    border-color: var(--border-color);
-    color: var(--text-dark);
-}
-
-/* 4. Fix the Footer Logo (which we want to STAY white) */
-body[data-theme="dark"] .footer-brand .logo {
-    color: var(--bg-light); /* Keep logo text light */
-}
-
-/* 5. Fix review stars (to be visible on dark bg) */
-body[data-theme="dark"] .star-rating label {
-    color: var(--border-color); /* Make empty stars darker gray */
-}
-body[data-theme="dark"] .star-rating input:checked ~ label,
-body[data-theme="dark"] .star-rating label:hover,
-body[data-theme="dark"] .star-rating label:hover ~ label {
-    color: #f59e0b; /* Keep selected stars yellow */
-}
-/* --- Featured Listing Picker (featured.html) --- */
-.my-listings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 1rem;
-    background-color: var(--bg-white);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-}
-
-.feature-select-card {
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
+/* 1. Main Payment Card (Glassmorphic look) */
+.payment-card-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background: var(--bg-white);
+    border-radius: 24px;
+    /* Deep shadow for "floating" effect */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s;
+    border: 1px solid var(--border-color);
+    position: relative;
 }
-.feature-select-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
+
+/* Dark Mode Card Background */
+body[data-theme="dark"] .payment-card-container {
+    background: #1f2937; 
+    border: 1px solid #374151;
 }
-.feature-select-card img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-}
-.feature-select-card h4 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.75rem;
+
+/* 2. Hero Section (Floating Note) */
+.payment-hero {
+    /* Emerald Green Gradient */
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+    padding: 3rem 2rem 4rem 2rem;
     text-align: center;
-}
-
-/* This is the style for the selected card */
-.feature-select-card.selected {
-    border-color: var(--secondary-blue);
-    box-shadow: var(--shadow-lg);
-    background-color: #eef2ff; /* Light blue background */
-}
-/* Dark mode selected style */
-body[data-theme="dark"] .feature-select-card.selected {
-    background-color: #374151; /* Dark blue background */
-}
-
-/* Style for the disabled submit button */
-#submit-feature-btn.disabled {
-    background-color: var(--text-light);
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-#submit-feature-btn.disabled:hover {
-    transform: none; /* No hover effect when disabled */
-}
-/* Style for the listings on the featured.html page */
-.my-listings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-}
-/* --- Styles for "See Password" Icon --- */
-
-/* This wrapper allows us to position the icon */
-.password-wrapper {
     position: relative;
+    /* Curved bottom edge */
+    clip-path: ellipse(150% 100% at 50% 0%); 
 }
 
-/* This styles and positions the new "eye" icon */
-.password-wrapper i {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    font-size: 1.25rem;
-    color: var(--text-light);
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.password-wrapper i:hover {
-    color: var(--text-dark);
-}
-
-/* This makes the password input add padding on the right */
-.password-wrapper input {
-    padding-right: 45px !important;
-}
-
-/* Dark mode fix for the icon */
-body[data-theme="dark"] .password-wrapper i:hover {
-    color: var(--text-dark);
-}
-/* --- Load More Button --- */
-.load-more-container {
-    text-align: center;
-    padding: 2rem;
-}
-
-.load-more-btn {
-    display: none; /* Will be shown by JS if there are more items */
-    padding: 12px 28px;
-    font-size: 1.1rem;
-}
-
-/* --- HORIZONTAL WALL OF LOVE (Left to Right Scroll) --- */
-
-.testimonials-section {
-    width: 100%;
-    overflow: hidden; 
-    position: relative;
-    padding: 60px 0; /* Increased padding */
-    background-color: var(--bg-light); 
-    
-    /* REMOVED: The mask-image that caused the blur artifact */
-}
-
-.testimonials-grid {
-    display: flex !important; /* Creates a horizontal row */
-    width: max-content;       /* Forces container to be as wide as the items */
-    gap: 24px;                /* Space between cards */
-    
-    /* SPEED SETTING: Slower, smoother scroll */
-    animation: scrollRight 30s linear infinite;
-    padding-left: 24px;
-}
-
-/* Pause on hover */
-.testimonials-grid:hover {
-    animation-play-state: paused;
-}
-
-@keyframes scrollRight {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
-}
-
-.testimonial-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: inline-block;
-    width: 350px; 
-    min-width: 350px;
-    margin-bottom: 0; 
-}
-
-/* --- UPDATED CARD STYLES (Fixed to match request) --- */
-
-.testimonial-card {
-    background: var(--bg-white);
-    border: 1px solid var(--border-color); /* Keeps the subtle border */
-    border-radius: 6px; /* Sharper corners */
-    padding: 24px;      /* Generous padding */
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.testimonial-card-link:hover .testimonial-card {
-    transform: translateY(-5px);
-    border-color: var(--secondary-blue);
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
-}
-
-/* Font styles */
-.stars { 
-    color: #f59e0b; 
-    font-size: 1rem; 
-    margin-bottom: 16px; 
-}
-
-.testimonial-card blockquote {
-    color: var(--text-light); /* Uses the greyish text color */
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 24px;
-    border: none;       /* Removed the blue side border */
-    padding: 0;         /* Removed padding */
-    font-style: normal; /* Text is normal, not italic */
-}
-
-.testimonial-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-top: none; /* Removed the line separator */
-    padding-top: 0;
-    margin-top: auto;
-}
-
-.testimonial-user img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.user-info strong {
-    display: block;
-    color: var(--text-dark);
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-.user-info span {
-    color: var(--text-light);
-    font-size: 0.8rem;
-}
-/* --- Password Reset Pages --- */
-
-/* Reuses .auth-page and .auth-container from existing styles */
-
-#forgot-form, 
-#update-password-form {
-    margin-top: 1.5rem;
-}
-
-#forgot-form button,
-#update-password-form button {
-    width: 100%;
-    margin-top: 1rem;
-}
-
-/* Optional: Add a back link style for the forgot password page */
-.back-to-login {
-    display: block;
-    margin-top: 1.5rem;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    text-decoration: none;
-}
-
-.back-to-login:hover {
-    color: var(--secondary-blue);
-    text-decoration: underline;
-}
-/* --- PREMIUM FEATURED STYLES (High Priority) --- */
-
-/* 1. The Container - Subtle Yellow Fade */
-.featured-listings-section {
-    position: relative;
-    background: linear-gradient(to bottom, var(--bg-light), #fffbeb) !important;
-}
-
-body[data-theme="dark"] .featured-listings-section {
-    background: linear-gradient(to bottom, var(--bg-light), #312e1a) !important;
-}
-
-/* 2. The Card - Force Yellow Border */
-.featured-listings-section .product-card {
-    border: 2px solid #FFD600 !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    position: relative !important;
-    overflow: visible !important;
-    z-index: 1;
-    background: var(--bg-white);
-}
-
-/* 3. The "FEATURED" Badge with THUNDER URL */
-.featured-listings-section .product-card::before {
-    content: "FEATURED";
-    position: absolute;
-    top: -14px;
-    right: 12px;
-    z-index: 99;
-    
-    /* Layout */
+.floating-note-wrapper {
+    margin-bottom: 1rem;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* --- IMAGE SETTINGS (Supabase URL) --- */
-    background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/thunder.png'); 
-    background-repeat: no-repeat;
-    background-size: 16px auto; 
-    background-position: 8px center;
-    
-    /* Padding: Left is larger (32px) to make room for the icon */
-    padding: 6px 12px 6px 32px;
-    
-    /* VISUALS */
-    background-color: #222222 !important;
-    border: 2px solid #FFD600 !important;
-    color: #FFD600 !important;
-    border-radius: 6px !important;
-    
-    /* TEXT */
-    font-size: 0.75rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 1px;
-    font-family: sans-serif;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-/* 4. Verified Seller Badge with BLUE CHECK URL */
-.featured-listings-section .seller-info span::after {
-    content: ""; 
+/* Floating Animation */
+.currency-note-img {
+    width: 260px; /* Big enough to be clear */
+    height: auto;
+    filter: drop-shadow(0 20px 20px rgba(0,0,0,0.3)); /* Real shadow */
+    transform: rotate(-6deg);
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: rotate(-6deg) translateY(0px); }
+    50% { transform: rotate(-6deg) translateY(-15px); }
+    100% { transform: rotate(-6deg) translateY(0px); }
+}
+
+.payment-hero h2 {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.payment-hero p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* 3. Content Body */
+.payment-body {
+    padding: 2rem;
+    margin-top: -2rem; /* Pulls content slightly up */
+}
+
+/* 4. Timeline Steps */
+.timeline-step {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+/* Vertical Line */
+.timeline-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 20px; 
+    top: 40px;
+    bottom: -20px; 
+    width: 2px;
+    background-color: var(--border-color);
+    z-index: 0;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background-color: var(--bg-white);
+    border: 2px solid var(--secondary-blue);
+    color: var(--secondary-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    z-index: 1; 
+    flex-shrink: 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+body[data-theme="dark"] .step-number {
+    background-color: #374151;
+    color: #60a5fa;
+    border-color: #60a5fa;
+}
+
+.step-content {
+    flex-grow: 1;
+    padding-top: 5px;
+}
+
+.step-content h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.step-content p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+/* 5. QR Code Box (FIXED: Clean white card) */
+.qr-box-premium {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Soft shadow, no dash */
+    border: 1px solid #e2e8f0; 
     display: inline-block;
-    
-    /* Size of the badge */
-    width: 18px;
-    height: 18px;
-    margin-left: 6px;
-    vertical-align: text-bottom;
-    
-    /* --- IMAGE SETTINGS (Supabase URL) --- */
-    background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/verified.png');
-    background-size: contain; 
-    background-repeat: no-repeat;
-    background-position: center;
-    
-    /* Reset background color */
-    background-color: transparent !important;
-    border-radius: 0;
+    text-align: center;
+    margin-top: 10px;
 }
 
-/* 5. Price Highlight */
-.featured-listings-section .price {
-    color: #eab308 !important;
-    font-weight: 800 !important;
-    font-size: 1.25rem !important;
+.qr-box-premium img {
+    width: 180px;
+    height: 180px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
 }
 
-body[data-theme="dark"] .featured-listings-section .price {
-    color: #FFD600 !important;
+.upi-tag {
+    margin-top: 12px;
+    background: #f8fafc;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e1; /* Subtle dash only on the text badge */
+    font-family: monospace;
+    font-size: 0.95rem;
+    color: #334155;
+    font-weight: 600;
+    display: inline-block;
 }
 
+/* 6. Cancel Link (Fixed) */
+.cancel-link {
+    display: block;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    transition: color 0.2s;
+}
+.cancel-link:hover {
+    color: #ef4444; 
+    text-decoration: none;
+}
