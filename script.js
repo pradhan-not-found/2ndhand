@@ -1143,12 +1143,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                  if (!title || !price || !category) {
-                     alert('Please fill in Title, Price, and Category.');
-                     if (submitButton) {
-                          submitButton.disabled = false;
-                          submitButton.textContent = 'Create Business Listing';
-                     }
-                     return;
+                      alert('Please fill in Title, Price, and Category.');
+                      if (submitButton) {
+                           submitButton.disabled = false;
+                           submitButton.textContent = 'Create Business Listing';
+                      }
+                      return;
                  }
 
 
@@ -1170,8 +1170,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error creating business listing:', error);
                 alert('An error occurred: ' + error.message);
                 if (submitButton) {
-                     submitButton.disabled = false;
-                     submitButton.textContent = 'Create Business Listing';
+                      submitButton.disabled = false;
+                      submitButton.textContent = 'Create Business Listing';
                 }
             }
         });
@@ -1495,8 +1495,8 @@ document.addEventListener('DOMContentLoaded', () => {
                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
                            window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
+                               top: offsetPosition,
+                               behavior: "smooth"
                            });
                       } else {
                            console.warn(`Smooth scroll target element not found: ${targetId}`);
@@ -1530,7 +1530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const savedTheme = localStorage.getItem('theme');
-    
+     
     if (savedTheme) {
         applyTheme(savedTheme);
     } else if (systemSetting.matches) {
@@ -1583,7 +1583,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 spotsLeftEl.style.color = "#ef4444"; // Red
             } else {
                 spotsLeftEl.textContent = `${spotsAvailable} of 4 spots available for this month.`;
-                spotsLeftEl.style.color = "#24b47e"; // Green
+                spotsLeftEl.style.color = "#ffffffff"; // Green
             }
 
         } catch (error) {
@@ -1594,15 +1594,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- END OF FEATURED SPOTS COUNT FUNCTION ---
 
 
-    // ---
     // --- "GET FEATURED" PAGE LOGIC (featured.html) ---
-    // ---
     const featuredPageLogic = document.querySelector('#featured-page-logic');
     if (featuredPageLogic) {
         const container = document.getElementById('my-business-listings-container');
         const submitBtn = document.getElementById('submit-feature-btn');
         let selectedListingId = null;
 
+        // 1. Check Access
         const checkFeatureAccess = async () => {
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) {
@@ -1610,25 +1609,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'login.html';
                 return null;
             }
-
-            const { data: profile } = await _supabase
-                .from('profiles')
-                .select('business_status')
-                .eq('id', session.user.id)
-                .single();
+            const { data: profile } = await _supabase.from('profiles').select('business_status').eq('id', session.user.id).single();
 
             if (!profile || profile.business_status !== 'active') {
-                alert('You must have an active business account to purchase a feature. Please pay the one-time fee first.');
+                alert('You need an active business account. Please pay the fee first.');
                 window.location.href = 'payment.html';
                 return null;
             }
-            
             return session.user;
         };
 
+        // 2. Load User's Listings
         const loadMyBusinessListings = async (user) => {
             if (!user || !container) return;
-
             container.innerHTML = '<div class="loading-spinner">Loading Business Listings...</div>';
             
             const { data: listings, error } = await _supabase
@@ -1636,107 +1629,123 @@ document.addEventListener('DOMContentLoaded', () => {
                 .select('id, title, image_url, is_featured, featured_until, reservation_expires_at')
                 .eq('seller_id', user.id);
 
-            if (error) {
-                console.error('Error fetching business listings:', error);
-                container.innerHTML = '<p>Could not load your listings.</p>';
-                return;
-            }
-            
-            if (listings.length === 0) {
-                container.innerHTML = '<p>You have not created any business listings yet. Please create a listing before you can feature it.</p>';
-                return;
-            }
+            if (error) { container.innerHTML = '<p>Error loading listings.</p>'; return; }
+            if (listings.length === 0) { container.innerHTML = '<p>No business listings found.</p>'; return; }
 
             container.innerHTML = '';
             const currentDate = new Date().toISOString();
 
             listings.forEach(item => {
-                const firstImage = item.image_url && item.image_url.length > 0 ? item.image_url[0] : 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
+                const firstImage = item.image_url?.[0] || 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
                 const card = document.createElement('div');
                 card.className = 'feature-select-card';
                 card.dataset.id = item.id;
                 
-                const isCurrentlyFeatured = item.is_featured && item.featured_until && item.featured_until > currentDate;
-                const isCurrentlyReserved = item.reservation_expires_at && item.reservation_expires_at > currentDate;
+                // Check status
+                const isFeatured = item.is_featured && item.featured_until > currentDate;
+                const isReserved = item.reservation_expires_at && item.reservation_expires_at > currentDate;
 
                 let cardTitle = item.title;
-                if (isCurrentlyFeatured) {
+                if (isFeatured) {
                     card.classList.add('selected'); 
-                    cardTitle += " (Currently Featured)";
-                } else if (isCurrentlyReserved) {
+                    cardTitle += " (Active)";
+                } else if (isReserved) {
                     card.classList.add('reserved');
-                    cardTitle += " (Reserved - Pending Payment)";
+                    cardTitle += " (Reserved)";
                     card.style.pointerEvents = 'none'; 
                 }
 
-                card.innerHTML = `
-                    <img src="${firstImage}" alt="${item.title}">
-                    <h4>${cardTitle}</h4>
-                `;
+                card.innerHTML = `<img src="${firstImage}" alt="${item.title}"><h4>${cardTitle}</h4>`;
                 
-                card.addEventListener('click', async () => { 
-                    if (isCurrentlyFeatured) {
-                        alert('This item is already featured and active.');
-                        return;
-                    }
-                    if (isCurrentlyReserved) {
-                         alert('This item is reserved and awaiting payment verification.');
-                         return;
-                    }
+                // Click Handler
+                card.addEventListener('click', () => { 
+                    if (isFeatured || isReserved) return;
 
-                    const expirationTime = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-                    
-                    const { error: reserveError } = await _supabase
-                        .from('business_listings')
-                        .update({ 
-                            reservation_expires_at: expirationTime,
-                            is_featured: false,
-                        })
-                        .eq('id', item.id)
-                        .eq('seller_id', user.id);
-
-                    if (reserveError) {
-                        console.error("Error reserving spot:", reserveError);
-                        alert("Error reserving spot. Please try again.");
-                        return;
-                    }
-
-                    container.querySelectorAll('.feature-select-card').forEach(c => c.classList.remove('selected', 'reserved'));
+                    // Deselect others and select this one visually
+                    container.querySelectorAll('.feature-select-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
                     selectedListingId = item.id;
                     
-                    checkFeaturedSpots(); 
-
                     if (submitBtn) {
-                        submitBtn.textContent = 'Submit Payment Proof';
+                        submitBtn.textContent = 'Submit & Reserve Spot';
                         submitBtn.classList.remove('disabled');
-                        
-                        const formLink = "https://docs.google.com/forms/d/e/1FAIpQLScsbHBTueV7h-UB5MCz7zY5V_YzKjyWVdW705B9n1_tjl3_Xg/viewform";
-                        const prefillId = "entry.1515399747"; 
-
-                        submitBtn.href = `${formLink}?${prefillId}=${selectedListingId}`;
+                        // We do NOT set href here yet. We handle the click separately below.
+                        submitBtn.href = '#'; 
                     }
                 });
-                
                 container.appendChild(card);
             });
         };
-        
-        (async () => {
-            if (submitBtn) {
+
+        // 3. HANDLE THE "SUBMIT" BUTTON CLICK (The Database Update Logic)
+        if (submitBtn) {
+            submitBtn.addEventListener('click', async (e) => {
+                e.preventDefault(); // Stop normal link behavior first
+
+                if (!selectedListingId) {
+                    alert("Please select a listing first.");
+                    return;
+                }
+                
+                if (submitBtn.classList.contains('disabled')) return;
+
+                // A. Check if spots are still available right before reserving
+                const currentDate = new Date().toISOString();
+                const { count } = await _supabase
+                    .from('business_listings')
+                    .select('*', { count: 'exact', head: true })
+                    .or(`is_featured.eq.true,reservation_expires_at.gt.${currentDate}`);
+
+                if (count >= 4) {
+                    alert("Sorry! All 4 spots have just been filled. Please check back next month.");
+                    checkFeaturedSpots(); // Update the UI text
+                    return;
+                }
+
+                // B. Reserve the spot in Supabase (Set reservation for 24 hours)
+                submitBtn.textContent = "Reserving Spot...";
                 submitBtn.classList.add('disabled');
-                submitBtn.href = '#';
-            }
-            
+
+                const expirationTime = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+                const { data: { session } } = await _supabase.auth.getSession();
+
+                const { error: reserveError } = await _supabase
+                    .from('business_listings')
+                    .update({ 
+                        reservation_expires_at: expirationTime, // Locks the spot
+                        is_featured: false 
+                    })
+                    .eq('id', selectedListingId)
+                    .eq('seller_id', session.user.id);
+
+                if (reserveError) {
+                    alert("Error reserving spot: " + reserveError.message);
+                    submitBtn.textContent = "Submit & Reserve Spot";
+                    submitBtn.classList.remove('disabled');
+                    return;
+                }
+
+                // C. Success! Redirect to Google Form
+                const googleFormLink = "https://docs.google.com/forms/d/e/1FAIpQLScsbHBTueV7h-UB5MCz7zY5V_YzKjyWVdW705B9n1_tjl3_Xg/viewform";
+                const entryFieldId = "entry.1515399747"; 
+                
+                // Open form in new tab
+                window.open(`${googleFormLink}?usp=pp_url&${entryFieldId}=${selectedListingId}`, '_blank');
+                
+                // D. Update UI immediately
+                alert("Spot reserved! Please complete the payment in the Google Form form that just opened.");
+                location.reload(); // Reload page to show the reservation status
+            });
+        }
+        
+        // Initializer
+        (async () => {
+            if (submitBtn) submitBtn.classList.add('disabled');
             checkFeaturedSpots();
-            
             const user = await checkFeatureAccess();
-            if (user) {
-                loadMyBusinessListings(user);
-            }
+            if (user) loadMyBusinessListings(user);
         })();
     }
     // --- END OF "GET FEATURED" LOGIC ---
-
 
 }); // End of DOMContentLoaded
