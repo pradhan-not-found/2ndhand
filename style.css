@@ -1288,3 +1288,94 @@ body[data-theme="dark"] .password-wrapper i:hover {
     color: var(--secondary-blue);
     text-decoration: underline;
 }
+/* --- PREMIUM FEATURED STYLES (High Priority) --- */
+
+/* 1. The Container - Subtle Yellow Fade */
+.featured-listings-section {
+    position: relative;
+    background: linear-gradient(to bottom, var(--bg-light), #fffbeb) !important;
+}
+
+body[data-theme="dark"] .featured-listings-section {
+    background: linear-gradient(to bottom, var(--bg-light), #312e1a) !important;
+}
+
+/* 2. The Card - Force Yellow Border */
+.featured-listings-section .product-card {
+    border: 2px solid #FFD600 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 1;
+    background: var(--bg-white);
+}
+
+/* 3. The "FEATURED" Badge with THUNDER URL */
+.featured-listings-section .product-card::before {
+    content: "FEATURED";
+    position: absolute;
+    top: -14px;
+    right: 12px;
+    z-index: 99;
+    
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* --- IMAGE SETTINGS (Supabase URL) --- */
+    background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/thunder.png'); 
+    background-repeat: no-repeat;
+    background-size: 16px auto; 
+    background-position: 8px center;
+    
+    /* Padding: Left is larger (32px) to make room for the icon */
+    padding: 6px 12px 6px 32px;
+    
+    /* VISUALS */
+    background-color: #222222 !important;
+    border: 2px solid #FFD600 !important;
+    color: #FFD600 !important;
+    border-radius: 6px !important;
+    
+    /* TEXT */
+    font-size: 0.75rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* 4. Verified Seller Badge with BLUE CHECK URL */
+.featured-listings-section .seller-info span::after {
+    content: ""; 
+    display: inline-block;
+    
+    /* Size of the badge */
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    vertical-align: text-bottom;
+    
+    /* --- IMAGE SETTINGS (Supabase URL) --- */
+    background-image: url('https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/verified.png');
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* Reset background color */
+    background-color: transparent !important;
+    border-radius: 0;
+}
+
+/* 5. Price Highlight */
+.featured-listings-section .price {
+    color: #eab308 !important;
+    font-weight: 800 !important;
+    font-size: 1.25rem !important;
+}
+
+body[data-theme="dark"] .featured-listings-section .price {
+    color: #FFD600 !important;
+}
+
