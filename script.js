@@ -1,5 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- AUTHENTICATION ---
+
+    // =================================================================
+    // 1. TOAST NOTIFICATION SYSTEM (Custom "Alert" Box)
+    // =================================================================
+    
+    // Inject CSS for the notification box dynamically
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #toast-box { 
+            visibility: hidden; 
+            min-width: 280px; 
+            background-color: #333; 
+            color: #fff; 
+            text-align: center; 
+            border-radius: 8px; 
+            padding: 16px; 
+            position: fixed; 
+            z-index: 9999; 
+            left: 50%; 
+            bottom: 30px; 
+            transform: translateX(-50%); 
+            font-size: 16px; 
+            font-weight: 500; 
+            opacity: 0; 
+            transition: opacity 0.4s, bottom 0.4s; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        #toast-box.show { visibility: visible; opacity: 1; bottom: 50px; }
+        #toast-box.success { background-color: #2ecc71; } /* Green */
+        #toast-box.error { background-color: #e74c3c; }   /* Red */
+    `;
+    document.head.appendChild(style);
+
+    // Create the actual div element
+    const toastDiv = document.createElement('div');
+    toastDiv.id = 'toast-box';
+    document.body.appendChild(toastDiv);
+
+    // Function to trigger the notification
+    const showToast = (message, type = 'success') => {
+        const x = document.getElementById("toast-box");
+        x.textContent = message;
+        x.className = "show " + type;
+        // Hide after 3 seconds
+        setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+    };
+
+    // =================================================================
+    // 2. AUTHENTICATION LOGIC
+    // =================================================================
+
     const signupForm = document.querySelector('#signup-form');
     const loginForm = document.querySelector('#login-form');
 
@@ -8,31 +58,41 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const fullName = signupForm.querySelector('#full-name').value;
             const email = signupForm.querySelector('#email').value;
-            // UPDATED: Capture phone number from the new input field
             const phone = signupForm.querySelector('#phone').value;
             const password = signupForm.querySelector('#password').value;
             
-            // FIX: Explicit redirect URL for Sign Up
+            // UI Loading State
+            const btn = signupForm.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "Signing up...";
+            btn.disabled = true;
+
             const { data, error } = await _supabase.auth.signUp({
                 email: email,
                 password: password,
                 options: { 
-                    emailRedirectTo: window.location.origin + '/login.html', // Redirects back to login page after verification
+                    // Redirect to your LIVE Vercel app
+                    emailRedirectTo: 'https://2ndhand-uni.vercel.app/login.html', 
                     data: { 
                         full_name: fullName,
                         phone_number: phone
                     } 
                 }
             });
-            if (error) { alert('Error signing up: ' + error.message); }
-            else {
-                alert('Sign up successful! Please check your email for a verification link.');
-                // Optional: Redirect them immediately or wait for them to click the link
-                window.location.href = 'login.html';
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+
+            if (error) { 
+                showToast('Error signing up: ' + error.message, 'error'); 
+            } else {
+                showToast('Sign up successful! Please check your email for a verification link.', 'success');
+                // Redirect after 2 seconds so they see the message
+                setTimeout(() => { window.location.href = 'login.html'; }, 2000);
             }
         });
 
-        // --- SEE PASSWORD LOGIC FOR SIGNUP ---
+        // --- SEE PASSWORD LOGIC ---
         const togglePassword = document.querySelector('#toggle-password');
         const passwordInput = signupForm.querySelector('#password'); 
 
@@ -57,15 +117,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = loginForm.querySelector('#email').value;
             const password = loginForm.querySelector('#password').value;
             
-            // Standard password login doesn't usually trigger "Site Not Found" unless using magic links,
-            // but if you use Magic Links elsewhere, add redirectTo there too.
+            const btn = loginForm.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "Logging in...";
+            btn.disabled = true;
+
             const { data, error } = await _supabase.auth.signInWithPassword({ email: email, password: password });
             
-            if (error) { alert('Error logging in: ' + error.message); }
-            else { window.location.href = 'index.html'; }
+            if (error) { 
+                btn.innerText = originalText;
+                btn.disabled = false;
+                showToast('Error logging in: ' + error.message, 'error'); 
+            }
+            // Success redirect is handled by onAuthStateChange below
         });
 
-        // --- SEE PASSWORD LOGIC FOR LOGIN ---
+        // --- SEE PASSWORD LOGIC ---
         const togglePassword = document.querySelector('#toggle-password');
         const passwordInput = loginForm.querySelector('#password');
 
@@ -94,16 +161,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if(submitBtn) { submitBtn.textContent = "Sending..."; submitBtn.disabled = true; }
 
-            // FIX: Explicit redirect URL for Password Reset
             const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/update_password.html', // Points to your specific update page
+                redirectTo: 'https://2ndhand-uni.vercel.app/update_password.html', 
             });
 
             if (error) {
-                alert('Error: ' + error.message);
+                showToast('Error: ' + error.message, 'error');
                 if(submitBtn) { submitBtn.textContent = "Send Reset Link"; submitBtn.disabled = false; }
             } else {
-                alert('Check your email for the password reset link!');
+                showToast('Check your email for the password reset link!', 'success');
                 if(submitBtn) { submitBtn.textContent = "Link Sent"; }
             }
         });
@@ -111,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updatePasswordForm = document.getElementById('update-password-form');
     if (updatePasswordForm) {
-        // Detect if user is in recovery mode to confirm link worked
         _supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'PASSWORD_RECOVERY') {
                 console.log("Recovery session active");
@@ -122,11 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const newPassword = document.getElementById('new-password').value;
 
-            // FIX: Check for session BEFORE updating to prevent "Auth session missing" error
             const { data: { session } } = await _supabase.auth.getSession();
             
             if (!session) {
-                alert('Unable to reset password. The link may have expired or was not clicked correctly. Please request a new "Forgot Password" link.');
+                showToast('Unable to reset password. The link may have expired.', 'error');
                 return;
             }
 
@@ -135,15 +199,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (error) {
-                alert('Error updating password: ' + error.message);
+                showToast('Error updating password: ' + error.message, 'error');
             } else {
-                alert('Password updated successfully! Logging you in...');
-                window.location.href = 'index.html';
+                showToast('Password updated successfully! Logging you in...', 'success');
+                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
             }
         });
     }
 
-    // --- NAVBAR UI ---
+    // =================================================================
+    // 3. AUTH STATE & NAVBAR (Success Redirect Logic)
+    // =================================================================
+    
     const updateNavUI = async () => {
         const { data: { session } } = await _supabase.auth.getSession();
         const navActions = document.querySelector('.nav-actions');
@@ -177,17 +244,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // Listen for Auth State Changes (Redirect back from email link)
+    // Listen for Auth State Changes
     _supabase.auth.onAuthStateChange((event, session) => { 
         if (event === 'SIGNED_IN') {
-            // Optional: If you want to force redirect to index on any sign-in
-            // window.location.href = 'index.html'; 
+            // Check if user is currently on the login or signup page
+            const isAuthPage = window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html');
+            
+            if (isAuthPage) {
+                // Show the success toast
+                showToast('Authentication Successful!', 'success');
+                
+                // Redirect after 1.5 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html'; 
+                }, 1500);
+            }
         }
         updateNavUI(); 
     });
     updateNavUI();
 
-    // --- PROFILE PAGE LOGIC (UPDATED) ---
+    // =================================================================
+    // 4. PROFILE PAGE LOGIC
+    // =================================================================
     const profileForm = document.querySelector('#profile-form');
     if (profileForm) {
         let currentUser = null;
@@ -228,11 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tableName = itemType === 'business' ? 'business_listings' : 'products';
                     
                     if (!itemId || !currentUser) { 
-                        alert('Error: Listing or user ID not found.'); 
+                        showToast('Error: Listing or user ID not found.', 'error'); 
                         return; 
                     }
 
-                    const confirmed = confirm('Are you sure you want to remove this listing? This item will be permanently deleted and cannot be recovered.');
+                    const confirmed = confirm('Are you sure you want to remove this listing? This item will be permanently deleted.');
 
                     if (confirmed) {
                         try {
@@ -246,12 +325,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             if (deleteError) throw deleteError;
                             
-                            alert('Item marked as sold and removed!');
+                            showToast('Item marked as sold and removed!', 'success');
                             loadMyListings(currentUser.id); 
                             updateNavUI(); 
                             
                         } catch (error) {
-                            alert('Error removing item: ' + (error.message || 'Unknown error.'));
+                            showToast('Error removing item: ' + error.message, 'error');
                         }
                     }
                 });
@@ -260,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const loadMyListings = async (userId) => {
             if (!userId) return;
-
             const container = document.getElementById('my-listings-container');
             if (!container) return; 
             
@@ -333,11 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const avatarFile = document.getElementById('avatar-file-input').files[0];
             const businessLogoFile = document.getElementById('business-logo-input')?.files[0];
-
-            let avatarUrl = document.getElementById('avatar-image')?.src;
             
             if (!currentUser) { 
-                alert('Error: User session expired. Please re-login.');
+                showToast('Error: User session expired. Please re-login.', 'error');
                 window.location.href = 'login.html';
                 return;
             }
@@ -345,21 +421,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (avatarFile) {
                 const filePath = `${currentUser.id}/avatar_${Date.now()}_${avatarFile.name}`;
                 const { error: uploadError } = await _supabase.storage.from('avatars').upload(filePath, avatarFile);
-                if (uploadError) { alert('Error uploading avatar: ' + uploadError.message); return; }
+                if (uploadError) { showToast('Error uploading avatar: ' + uploadError.message, 'error'); return; }
                 updates.avatar_url = _supabase.storage.from('avatars').getPublicUrl(filePath).data.publicUrl;
             }
 
             if (businessLogoFile) {
                 const filePath = `${currentUser.id}/logo_${Date.now()}_${businessLogoFile.name}`;
                 const { error: uploadError } = await _supabase.storage.from('avatars').upload(filePath, businessLogoFile);
-                if (uploadError) { alert('Error uploading business logo: ' + uploadError.message); return; }
+                if (uploadError) { showToast('Error uploading business logo: ' + uploadError.message, 'error'); return; }
                 updates.business_logo_url = _supabase.storage.from('avatars').getPublicUrl(filePath).data.publicUrl;
             }
 
             const { error } = await _supabase.from('profiles').upsert(updates);
-            if (error) { alert('Error updating profile: ' + error.message); }
+            if (error) { showToast('Error updating profile: ' + error.message, 'error'); }
             else {
-                alert('Profile updated successfully!');
+                showToast('Profile updated successfully!', 'success');
                 getProfile();
                 updateNavUI();
             }
@@ -368,7 +444,9 @@ document.addEventListener('DOMContentLoaded', () => {
         getProfile();
     }
 
-    // --- SELL PAGE LOGIC (For Regular Products) ---
+    // =================================================================
+    // 5. SELL PAGE LOGIC
+    // =================================================================
     const sellForm = document.querySelector('#sell-form');
     if (sellForm) {
         const imageInput = document.getElementById('item-images');
@@ -379,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (imageInput) {
             imageInput.addEventListener('change', () => {
                 if (imageInput.files.length > 5) {
-                    alert('You can only upload a maximum of 5 images.');
+                    showToast('You can only upload a maximum of 5 images.', 'error');
                     imageInput.value = '';
                     return;
                 }
@@ -401,8 +479,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sellForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { alert('You must be logged in to sell an item.'); window.location.href = 'login.html'; return; }
-            if (selectedFiles.length === 0) { alert('Please upload at least one image.'); return; }
+            if (!session) { showToast('You must be logged in to sell an item.', 'error'); window.location.href = 'login.html'; return; }
+            if (selectedFiles.length === 0) { showToast('Please upload at least one image.', 'error'); return; }
             if (submitButton) {
                 submitButton.disabled = true;
                 submitButton.textContent = 'Listing your item...';
@@ -427,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const location = document.getElementById('item-location')?.value;
                 
                 if (!title || !price || !category) {
-                       alert('Please fill in Title, Price, and Category.');
+                       showToast('Please fill in Title, Price, and Category.', 'error');
                        if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'List Item for Sale'; }
                        return;
                 }
@@ -443,10 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 if (insertError) throw insertError;
                 
-                alert('Item listed successfully!');
-                window.location.href = 'browse.html';
+                showToast('Item listed successfully!', 'success');
+                setTimeout(() => { window.location.href = 'browse.html'; }, 1500);
             } catch (error) {
-                alert('An error occurred: ' + error.message);
+                showToast('An error occurred: ' + error.message, 'error');
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'List Item for Sale';
@@ -455,62 +533,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- *** START OF REPLACED BROWSE PAGE LOGIC (SCALABLE) *** ---
+    // =================================================================
+    // 6. BROWSE PAGE LOGIC
+    // =================================================================
     if (document.getElementById('price-range')) {
         
-        // --- 1. Get all filter elements ---
         const listingGrid = document.querySelector('.browse-layout .listing-grid');
         const priceRangeFilter = document.getElementById('price-range');
         const priceRangeValue = document.getElementById('price-range-value');
         const searchInput = document.getElementById('search-filter');
         const categoryRadios = document.querySelectorAll('input[name="category"]');
-        const loadMoreBtn = document.getElementById('load-more-btn-browse'); // Unique ID
+        const loadMoreBtn = document.getElementById('load-more-btn-browse');
         
-        // --- 2. State variables ---
         let currentPage = 0;
-        const itemsPerPage = 12; // Load 12 items at a time
+        const itemsPerPage = 12;
         let isLoading = false;
 
-        // --- 3. Main function to load products ---
         const loadProducts = async (isNewQuery = false) => {
             if (isLoading) return;
             isLoading = true;
             if (loadMoreBtn) loadMoreBtn.textContent = 'Loading...';
 
-            // If a filter changed, reset everything
             if (isNewQuery) {
                 currentPage = 0;
                 listingGrid.innerHTML = '';
             }
 
-            // --- 4. Get all filter values ---
             const searchTerm = searchInput?.value.toLowerCase() || '';
             const category = document.querySelector('input[name="category"]:checked')?.value || 'all';
             const maxPrice = priceRangeFilter?.value;
 
-            // --- 5. Build the Supabase query ---
-            let query = _supabase
-                .from('products')
-                .select(`*, profiles!seller_id(full_name, avatar_url)`);
+            let query = _supabase.from('products').select(`*, profiles!seller_id(full_name, avatar_url)`);
 
-            // Add server-side filters
-            if (category !== 'all') {
-                query = query.eq('category', category);
-            }
-            if (searchTerm) {
-                // Search both title and description
-                query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
-            }
-            if (maxPrice) {
-                query = query.lte('price', Number(maxPrice));
-            }
+            if (category !== 'all') { query = query.eq('category', category); }
+            if (searchTerm) { query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`); }
+            if (maxPrice) { query = query.lte('price', Number(maxPrice)); }
 
-            // --- 6. Add pagination to the query ---
             const from = currentPage * itemsPerPage;
             const to = from + itemsPerPage - 1;
             query = query.range(from, to);
 
-            // --- 7. Fetch data and render ---
             const { data: products, error } = await query;
 
             if (error) {
@@ -518,20 +580,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 listingGrid.innerHTML = '<p>Could not load products. Please try again later.</p>';
             } else {
                 if (products.length > 0) {
-                    renderProducts(products); // Render the items
-                    currentPage++; // Go to the next page for the *next* load
+                    renderProducts(products); 
+                    currentPage++; 
                 }
 
-                // Show or hide the "Load More" button
                 if (loadMoreBtn) {
-                    if (products.length < itemsPerPage) {
-                        loadMoreBtn.style.display = 'none'; // No more items
-                    } else {
-                        loadMoreBtn.style.display = 'block'; // More items exist
-                    }
+                    if (products.length < itemsPerPage) { loadMoreBtn.style.display = 'none'; } 
+                    else { loadMoreBtn.style.display = 'block'; }
                 }
                 
-                // Show "no results" message only on a new query
                 if (isNewQuery && products.length === 0) {
                     listingGrid.innerHTML = '<p>No items found matching your criteria.</p>';
                 }
@@ -541,7 +598,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (loadMoreBtn) loadMoreBtn.textContent = 'Load More';
         };
 
-        // --- 8. Render function (appends items) ---
         const renderProducts = (productsToRender) => {
             if (!listingGrid) return;
 
@@ -563,19 +619,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     </div>`;
-                listingGrid.innerHTML += productCardHTML; // Use += to append
+                listingGrid.innerHTML += productCardHTML;
             });
         };
 
-        // --- 9. Function to update price slider max value ---
         const updatePriceSlider = async () => {
-            // Get the highest price from the products table
-            const { data, error } = await _supabase
-                .from('products')
-                .select('price')
-                .order('price', { ascending: false })
-                .limit(1)
-                .single();
+            const { data, error } = await _supabase.from('products').select('price').order('price', { ascending: false }).limit(1).single();
                 
             if (error || !data) return;
             const maxPrice = Number(data.price) || 10000;
@@ -589,67 +638,51 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // --- 10. All Event Listeners ---
-        
-        // Function to call when any filter changes
-        const handleFilterChange = () => {
-            loadProducts(true); // true = new query
-        };
+        const handleFilterChange = () => { loadProducts(true); };
 
-        // Add to Cart listener (uses event delegation, more efficient)
         listingGrid.addEventListener('click', async (e) => {
             const button = e.target.closest('.btn-add-to-cart');
             if (button) {
                 const productId = button.dataset.id;
                 const itemType = button.dataset.type;
                 const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { alert('Please log in to add items to your cart.'); window.location.href = 'login.html'; return; }
+                if (!session) { showToast('Please log in to add items to your cart.', 'error'); window.location.href = 'login.html'; return; }
 
                 const { error } = await _supabase.from('cart_items').insert({ product_id: productId, user_id: session.user.id, item_type: itemType });
                 if (error) {
-                    if (error.code === '23505') { alert('This item is already in your cart.'); }
-                    else { alert('Error adding item to cart: ' + error.message); }
+                    if (error.code === '23505') { showToast('This item is already in your cart.', 'error'); }
+                    else { showToast('Error adding item to cart: ' + error.message, 'error'); }
                 } else {
-                    alert('Item added to cart!');
+                    showToast('Item added to cart!', 'success');
                     updateNavUI();
                 }
             }
         });
 
-        // Filter listeners
         if (priceRangeFilter) {
             priceRangeFilter.addEventListener('input', () => {
                  if (priceRangeValue) {
                      priceRangeValue.textContent = `₹${parseInt(priceRangeFilter.value).toLocaleString('en-IN')}`;
                  }
             });
-            // 'change' event fires when user releases the slider
             priceRangeFilter.addEventListener('change', handleFilterChange);
         }
-        if (searchInput) {
-            // 'change' event fires when user presses Enter or clicks away
-            searchInput.addEventListener('change', handleFilterChange);
-        }
-        if (categoryRadios) {
-            categoryRadios.forEach(radio => radio.addEventListener('change', handleFilterChange));
-        }
-        
-        // "Load More" button listener
+        if (searchInput) { searchInput.addEventListener('change', handleFilterChange); }
+        if (categoryRadios) { categoryRadios.forEach(radio => radio.addEventListener('change', handleFilterChange)); }
         if (loadMoreBtn) {
             loadMoreBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                loadProducts(false); // false = append
+                loadProducts(false);
             });
         }
 
-        // --- 11. Initial Load ---
-        updatePriceSlider(); // Set max price
-        loadProducts(true); // Load first page of items
+        updatePriceSlider();
+        loadProducts(true);
     }
-    // --- *** END OF REPLACED BROWSE PAGE LOGIC *** ---
 
-
-    // --- PRODUCT DETAIL PAGE LOGIC (UPDATED WITH REVIEWS) ---
+    // =================================================================
+    // 7. PRODUCT DETAIL PAGE LOGIC
+    // =================================================================
     const productDetailContainer = document.querySelector('#product-detail-container');
     if (productDetailContainer) {
         let currentProductId = null;
@@ -662,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (reviewImageInput) {
             reviewImageInput.addEventListener('change', () => {
                 if (reviewImageInput.files.length > 5) {
-                    alert('You can only upload a maximum of 5 images for a review.');
+                    showToast('You can only upload a maximum of 5 images for a review.', 'error');
                     reviewImageInput.value = '';
                     return;
                 }
@@ -731,14 +764,14 @@ document.addEventListener('DOMContentLoaded', () => {
             reviewForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (!currentProductId) {
-                    alert('Could not identify the product to review. Please refresh the page.');
+                    showToast('Could not identify the product to review.', 'error');
                     return;
                 }
                 const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { alert('You must be logged in to leave a review.'); return; }
+                if (!session) { showToast('You must be logged in to leave a review.', 'error'); return; }
                 const rating = reviewForm.querySelector('input[name="rating"]:checked')?.value;
                 const comment = reviewForm.querySelector('#comment')?.value;
-                if (!rating) { alert('Please select a star rating.'); return; }
+                if (!rating) { showToast('Please select a star rating.', 'error'); return; }
 
                 let imageUrls = null;
                 if (reviewFiles.length > 0) {
@@ -760,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         imageUrls = uploadResults.map(result => _supabase.storage.from('reviews').getPublicUrl(result.data.path).data.publicUrl);
                     } catch (uploadError) {
-                        alert('Error uploading review images: ' + uploadError.message);
+                        showToast('Error uploading review images: ' + uploadError.message, 'error');
                     } finally {
                         if (submitButton) {
                             submitButton.disabled = false;
@@ -782,9 +815,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     item_type: itemTypeForReview
                 });
 
-                if (error) { alert('Error submitting review: ' + error.message); }
+                if (error) { showToast('Error submitting review: ' + error.message, 'error'); }
                 else {
-                    alert('Thank you for your feedback!');
+                    showToast('Thank you for your feedback!', 'success');
                     reviewForm.reset();
                     if (reviewImagePreview) reviewImagePreview.innerHTML = '';
                     reviewFiles = [];
@@ -883,16 +916,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 addToCartBtn.addEventListener('click', async (e) => {
                     e.preventDefault();
                     const { data: { session } } = await _supabase.auth.getSession();
-                    if (!session) { alert('Please log in to add items to your cart.'); window.location.href = 'login.html'; return; }
+                    if (!session) { showToast('Please log in to add items to your cart.', 'error'); window.location.href = 'login.html'; return; }
 
                     const itemTypeForCart = urlParams.get('type') || 'product';
 
                     const { error } = await _supabase.from('cart_items').insert({ product_id: productId, user_id: session.user.id, item_type: itemTypeForCart });
                     if (error) {
-                        if (error.code === '23505') { alert('This item is already in your cart.'); }
-                        else { alert('Error adding item to cart: ' + error.message); }
+                        if (error.code === '23505') { showToast('This item is already in your cart.', 'error'); }
+                        else { showToast('Error adding item to cart: ' + error.message, 'error'); }
                     } else {
-                        alert('Item added to cart!');
+                        showToast('Item added to cart!', 'success');
                         updateNavUI();
                     }
                 });
@@ -903,7 +936,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- CART PAGE LOGIC (FINAL) ---
+    // =================================================================
+    // 8. CART PAGE LOGIC
+    // =================================================================
     const cartContainer = document.querySelector('#cart-container');
     if (cartContainer) {
         const loadCart = async () => {
@@ -917,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .from('cart_items')
                 .select('id, product_id, item_type')
                 .eq('user_id', session.user.id)
-                .not('product_id', 'is', null); // <-- This hides items where product was deleted
+                .not('product_id', 'is', null);
 
             if (cartError) {
                 cartContainer.innerHTML = '<p>Error loading your cart.</p>';
@@ -1006,14 +1041,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (!cartItemId) {
                          console.error("Could not find cart item ID to remove.");
-                         alert('Error removing item.');
+                         showToast('Error removing item.', 'error');
                          return;
                     }
                     
                     const { error } = await _supabase.from('cart_items').delete().match({ id: cartItemId });
                     if (error) {
                          console.error("Error removing item from DB:", error);
-                         alert('Error removing item: ' + error.message);
+                         showToast('Error removing item: ' + error.message, 'error');
                     } else {
                          if (cartItemEl) {
                              cartItemEl.style.opacity = '0';
@@ -1026,6 +1061,7 @@ document.addEventListener('DOMContentLoaded', () => {
                              loadCart();
                              updateNavUI();
                          }
+                         showToast('Item removed.', 'success');
                     }
                 });
             });
@@ -1034,7 +1070,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- HOMEPAGE FEATURED LOGIC (PRO BUSINESSES ONLY) ---
+    // =================================================================
+    // 9. HOMEPAGE & EXTRAS
+    // =================================================================
+    
+    // Featured
     const featuredListingsGrid = document.querySelector('#featured-listings-grid');
     if (featuredListingsGrid) {
         const fetchFeaturedBusinesses = async () => {
@@ -1090,8 +1130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchFeaturedBusinesses();
     }
 
-
-    // --- BUSINESS SELL PAGE LOGIC (Form submission) ---
+    // Business Sell
     const businessSellFormElement = document.querySelector('#business-sell-form');
     if (businessSellFormElement) {
         const imageInput = document.getElementById('item-images');
@@ -1102,7 +1141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (imageInput) {
              imageInput.addEventListener('change', () => {
                  if (imageInput.files.length > 5) {
-                     alert('You can only upload a maximum of 5 images.');
+                     showToast('You can only upload a maximum of 5 images.', 'error');
                      imageInput.value = '';
                      return;
                  }
@@ -1127,8 +1166,8 @@ document.addEventListener('DOMContentLoaded', () => {
         businessSellFormElement.addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { alert('You must be logged in to create a listing.'); window.location.href = 'login.html'; return; }
-            if (selectedFiles.length === 0) { alert('Please upload at least one image.'); return; }
+            if (!session) { showToast('You must be logged in to create a listing.', 'error'); window.location.href = 'login.html'; return; }
+            if (selectedFiles.length === 0) { showToast('Please upload at least one image.', 'error'); return; }
 
             if (submitButton) {
                  submitButton.disabled = true;
@@ -1158,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                  if (!title || !price || !category) {
-                      alert('Please fill in Title, Price, and Category.');
+                      showToast('Please fill in Title, Price, and Category.', 'error');
                       if (submitButton) {
                            submitButton.disabled = false;
                            submitButton.textContent = 'Create Business Listing';
@@ -1178,12 +1217,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 if (insertError) throw insertError;
 
-                alert('Business listing created successfully!');
-                window.location.href = 'business.html';
+                showToast('Business listing created successfully!', 'success');
+                setTimeout(() => { window.location.href = 'business.html'; }, 1500);
 
             } catch (error) {
                 console.error('Error creating business listing:', error);
-                alert('An error occurred: ' + error.message);
+                showToast('An error occurred: ' + error.message, 'error');
                 if (submitButton) {
                       submitButton.disabled = false;
                       submitButton.textContent = 'Create Business Listing';
@@ -1192,13 +1231,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- BUSINESS SELL PAGE - PAYMENT GATE (Access Check) ---
+    // Business Gate
     if (document.querySelector('#business-sell-form')) {
         const checkBusinessAccess = async () => {
             const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
 
             if (sessionError || !session) {
-                alert('Please log in to create a business listing.');
+                showToast('Please log in to create a business listing.', 'error');
                 window.location.href = 'login.html';
                 return;
             }
@@ -1210,22 +1249,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 .single();
 
             if (profileError || !profile || profile.business_status !== 'active') {
-                alert('You need an active business subscription to post a listing. Please upgrade your account.');
+                showToast('You need an active business subscription to post.', 'error');
                 window.location.href = 'payment.html';
                 return;
             }
-
-            console.log('Business access granted.');
         };
         checkBusinessAccess();
     }
 
-
-    // --- *** START OF REPLACED BUSINESS BROWSE PAGE LOGIC (SCALABLE) *** ---
+    // Business Gating Button
     const businessLayout = document.querySelector('#business-layout');
     if (businessLayout) {
-        
-           // --- PAYMENT GATING FOR CREATE BUTTON (No changes) ---
            const gateBusinessButton = async () => {
                 const createListingBtn = document.getElementById('create-business-listing-btn');
                 if (!createListingBtn) return; 
@@ -1260,176 +1294,11 @@ document.addEventListener('DOMContentLoaded', () => {
            };
            gateBusinessButton();
            _supabase.auth.onAuthStateChange((event, session) => {
-                console.log("Auth state changed:", event); 
                 gateBusinessButton(); 
            });
-           // --- END OF GATING LOGIC ---
-
-        // --- 1. Get all filter elements ---
-        const searchInput = document.getElementById('search-filter');
-        const categoryRadios = businessLayout.querySelectorAll('input[name="category"]');
-        const listingGrid = document.getElementById('business-listing-grid');
-        const loadMoreBtn = document.getElementById('load-more-btn-business'); // Unique ID
-
-        // --- 2. State variables ---
-        let currentPage = 0;
-        const itemsPerPage = 12; // Load 12 items at a time
-        let isLoading = false;
-        
-        // --- 3. Main function to load listings ---
-        const loadBusinessListings = async (isNewQuery = false) => {
-            if (isLoading) return;
-            isLoading = true;
-            if (loadMoreBtn) loadMoreBtn.textContent = 'Loading...';
-
-            if (isNewQuery) {
-                currentPage = 0;
-                listingGrid.innerHTML = '';
-            }
-
-            // --- 4. Get all filter values ---
-            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-            const checkedCategoryRadio = categoryRadios ? businessLayout.querySelector('input[name="category"]:checked') : null;
-            const category = checkedCategoryRadio ? checkedCategoryRadio.value : 'all';
-
-            // --- 5. Build the Supabase query ---
-            let query = _supabase
-                .from('business_listings')
-                .select(`*, profiles!seller_id(full_name, avatar_url, business_name, business_logo_url)`);
-
-            // Add server-side filters
-            if (category !== 'all') {
-                query = query.eq('category', category);
-            }
-            if (searchTerm) {
-                query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
-            }
-            
-            // NOTE: No price filter on this page
-
-            // --- 6. Add pagination to the query ---
-            const from = currentPage * itemsPerPage;
-            const to = from + itemsPerPage - 1;
-            query = query.range(from, to);
-
-            // --- 7. Fetch data and render ---
-            const { data: listings, error } = await query;
-
-            if (error) {
-                console.error('Error fetching business listings:', error);
-                if (listingGrid) listingGrid.innerHTML = '<p>Could not load listings.</p>';
-            } else {
-                if (listings.length > 0) {
-                    renderBusinessListings(listings); // Render the items
-                    currentPage++; // Go to the next page for the *next* load
-                }
-
-                // Show or hide the "Load More" button
-                if (loadMoreBtn) {
-                    if (listings.length < itemsPerPage) {
-                        loadMoreBtn.style.display = 'none'; // No more items
-                    } else {
-                        loadMoreBtn.style.display = 'block'; // More items exist
-                    }
-                }
-                
-                // Show "no results" message only on a new query
-                if (isNewQuery && listings.length === 0) {
-                    listingGrid.innerHTML = '<p>No business listings found matching your criteria.</p>';
-                }
-            }
-            
-            isLoading = false;
-            if (loadMoreBtn) loadMoreBtn.textContent = 'Load More';
-        };
-
-        // --- 8. Render function (appends items) ---
-        const renderBusinessListings = (listingsToRender) => {
-             if (!listingGrid) return;
-
-             listingsToRender.forEach(listing => {
-                 const displayName = listing.profiles?.business_name || listing.profiles?.full_name || 'Campus Seller';
-                 const displayImage = listing.profiles?.business_logo_url || listing.profiles?.avatar_url || 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
-                 const firstImage = listing.image_url && listing.image_url.length > 0 ? listing.image_url[0] : 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
-
-                 const listingCardHTML = `
-                     <div class="product-card-link">
-                         <div class="product-card">
-                             <a href="product.html?id=${listing.id}&type=business">
-                                 <img src="${firstImage}" alt="${listing.title || 'Business Listing'}">
-                             </a>
-                             <div class="product-info">
-                                 <h3><a href="product.html?id=${listing.id}&type=business">${listing.title || 'Untitled Listing'}</a></h3>
-                                 <p class="price">From ₹${listing.price || 0}</p>
-                                 <div class="product-card-footer">
-                                     <div class="seller-info">
-                                         <img src="${displayImage}" alt="${displayName}">
-                                         <span>${displayName}</span>
-                                     </div>
-                                     <button class="btn-add-to-cart" data-id="${listing.id}" data-type="business"><i class='bx bx-cart-add'></i> Add to Cart</button>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>`;
-                 listingGrid.innerHTML += listingCardHTML; // Use += to append
-             });
-        };
-
-        // --- 9. All Event Listeners ---
-        
-        // Function to call when any filter changes
-        const handleFilterChange = () => {
-            loadBusinessListings(true); // true = new query
-        };
-        
-        // Add to Cart listener (uses event delegation)
-        listingGrid.addEventListener('click', async (e) => {
-            const button = e.target.closest('.btn-add-to-cart');
-            if (button) {
-                const productId = button.dataset.id;
-                const itemType = button.dataset.type;
-                const { data: { session } } = await _supabase.auth.getSession();
-                if (!session) { alert('Please log in to add items to your cart.'); window.location.href = 'login.html'; return; }
-
-                const { error } = await _supabase.from('cart_items').insert({ product_id: productId, user_id: session.user.id, item_type: itemType });
-                if (error) {
-                    if (error.code === '23505') { alert('This item is already in your cart.'); }
-                    else { alert('Error adding item to cart: ' + error.message); }
-                } else {
-                    alert('Item added to cart!');
-                    updateNavUI();
-                }
-            }
-        });
-
-        // Filter listeners
-        if (searchInput) {
-            searchInput.addEventListener('change', handleFilterChange);
-        }
-        if (categoryRadios) {
-             categoryRadios.forEach(radio => radio.addEventListener('change', handleFilterChange));
-        }
-
-        // "Load More" button listener
-        if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                loadBusinessListings(false); // false = append
-            });
-        }
-
-        // --- 10. Initial Load ---
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchQuery = urlParams.get('q');
-        if (searchQuery && searchInput) {
-            searchInput.value = searchQuery;
-        }
-        loadBusinessListings(true); // Load first page
     }
-    // --- *** END OF REPLACED BUSINESS BROWSE PAGE LOGIC *** ---
 
-
-    // --- Homepage Smart Search Redirect (DATABASE-POWERED) ---
+    // Search Redirect
     const heroSearchForm = document.querySelector('#hero-search-form');
     if (heroSearchForm) {
         heroSearchForm.addEventListener('submit', async function (event) {
@@ -1486,14 +1355,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                  console.error("Error during homepage search redirect:", error);
-                 alert("Search failed due to an error. Redirecting to browse page.");
+                 showToast("Search failed. Redirecting to browse.", 'error');
                  window.location.href = `browse.html?q=${encodeURIComponent(searchTerm)}`;
             }
         });
     }
 
-
-    // --- SMOOTH SCROLL ---
+    // Smooth Scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -1513,8 +1381,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                top: offsetPosition,
                                behavior: "smooth"
                            });
-                      } else {
-                           console.warn(`Smooth scroll target element not found: ${targetId}`);
                       }
                  } catch (error) {
                       console.error(`Error finding smooth scroll target: ${targetId}`, error);
@@ -1523,9 +1389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ---
-    // --- DARK MODE TOGGLE LOGIC ---
-    // ---
+    // Dark Mode
     const themeToggle = document.getElementById('theme-toggle');
     const systemSetting = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -1570,11 +1434,8 @@ document.addEventListener('DOMContentLoaded', () => {
             applyTheme(newTheme);
         }
     });
-    // --- END OF DARK MODE LOGIC ---
 
-    // ---
-    // --- FEATURED SPOTS COUNT FUNCTION (Defined globally for use below) ---
-    // ---
+    // Featured Spots Count
     const checkFeaturedSpots = async () => {
         const spotsLeftEl = document.getElementById('feature-spots-left');
         if (!spotsLeftEl) return;
@@ -1606,35 +1467,31 @@ document.addEventListener('DOMContentLoaded', () => {
             spotsLeftEl.textContent = "Could not load available spots. Please try again.";
         }
     };
-    // --- END OF FEATURED SPOTS COUNT FUNCTION ---
 
-
-    // --- "GET FEATURED" PAGE LOGIC (featured.html) ---
+    // Get Featured Page Logic
     const featuredPageLogic = document.querySelector('#featured-page-logic');
     if (featuredPageLogic) {
         const container = document.getElementById('my-business-listings-container');
         const submitBtn = document.getElementById('submit-feature-btn');
         let selectedListingId = null;
 
-        // 1. Check Access
         const checkFeatureAccess = async () => {
             const { data: { session } } = await _supabase.auth.getSession();
             if (!session) {
-                alert('Please log in to manage your business listings.');
+                showToast('Please log in to manage your business listings.', 'error');
                 window.location.href = 'login.html';
                 return null;
             }
             const { data: profile } = await _supabase.from('profiles').select('business_status').eq('id', session.user.id).single();
 
             if (!profile || profile.business_status !== 'active') {
-                alert('You need an active business account. Please pay the fee first.');
+                showToast('You need an active business account. Please pay the fee first.', 'error');
                 window.location.href = 'payment.html';
                 return null;
             }
             return session.user;
         };
 
-        // 2. Load User's Listings
         const loadMyBusinessListings = async (user) => {
             if (!user || !container) return;
             container.innerHTML = '<div class="loading-spinner">Loading Business Listings...</div>';
@@ -1656,7 +1513,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.className = 'feature-select-card';
                 card.dataset.id = item.id;
                 
-                // Check status
                 const isFeatured = item.is_featured && item.featured_until > currentDate;
                 const isReserved = item.reservation_expires_at && item.reservation_expires_at > currentDate;
 
@@ -1672,11 +1528,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 card.innerHTML = `<img src="${firstImage}" alt="${item.title}"><h4>${cardTitle}</h4>`;
                 
-                // Click Handler
                 card.addEventListener('click', () => { 
                     if (isFeatured || isReserved) return;
-
-                    // Deselect others and select this one visually
                     container.querySelectorAll('.feature-select-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
                     selectedListingId = item.id;
@@ -1684,7 +1537,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (submitBtn) {
                         submitBtn.textContent = 'Submit & Reserve Spot';
                         submitBtn.classList.remove('disabled');
-                        // We do NOT set href here yet. We handle the click separately below.
                         submitBtn.href = '#'; 
                     }
                 });
@@ -1692,19 +1544,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        // 3. HANDLE THE "SUBMIT" BUTTON CLICK (The Database Update Logic)
         if (submitBtn) {
             submitBtn.addEventListener('click', async (e) => {
-                e.preventDefault(); // Stop normal link behavior first
+                e.preventDefault(); 
 
                 if (!selectedListingId) {
-                    alert("Please select a listing first.");
+                    showToast("Please select a listing first.", 'error');
                     return;
                 }
                 
                 if (submitBtn.classList.contains('disabled')) return;
 
-                // A. Check if spots are still available right before reserving
                 const currentDate = new Date().toISOString();
                 const { count } = await _supabase
                     .from('business_listings')
@@ -1712,12 +1562,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     .or(`is_featured.eq.true,reservation_expires_at.gt.${currentDate}`);
 
                 if (count >= 4) {
-                    alert("Sorry! All 4 spots have just been filled. Please check back next month.");
-                    checkFeaturedSpots(); // Update the UI text
+                    showToast("Sorry! All 4 spots have just been filled.", 'error');
+                    checkFeaturedSpots();
                     return;
                 }
 
-                // B. Reserve the spot in Supabase (Set reservation for 24 hours)
                 submitBtn.textContent = "Reserving Spot...";
                 submitBtn.classList.add('disabled');
 
@@ -1727,33 +1576,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { error: reserveError } = await _supabase
                     .from('business_listings')
                     .update({ 
-                        reservation_expires_at: expirationTime, // Locks the spot
+                        reservation_expires_at: expirationTime, 
                         is_featured: false 
                     })
                     .eq('id', selectedListingId)
                     .eq('seller_id', session.user.id);
 
                 if (reserveError) {
-                    alert("Error reserving spot: " + reserveError.message);
+                    showToast("Error reserving spot: " + reserveError.message, 'error');
                     submitBtn.textContent = "Submit & Reserve Spot";
                     submitBtn.classList.remove('disabled');
                     return;
                 }
 
-                // C. Success! Redirect to Google Form
                 const googleFormLink = "https://docs.google.com/forms/d/e/1FAIpQLScsbHBTueV7h-UB5MCz7zY5V_YzKjyWVdW705B9n1_tjl3_Xg/viewform";
                 const entryFieldId = "entry.1515399747"; 
                 
-                // Open form in new tab
                 window.open(`${googleFormLink}?usp=pp_url&${entryFieldId}=${selectedListingId}`, '_blank');
                 
-                // D. Update UI immediately
-                alert("Spot reserved! Please complete the payment in the Google Form form that just opened.");
-                location.reload(); // Reload page to show the reservation status
+                showToast("Spot reserved! Please complete the payment.", 'success');
+                setTimeout(() => { location.reload(); }, 2000);
             });
         }
         
-        // Initializer
         (async () => {
             if (submitBtn) submitBtn.classList.add('disabled');
             checkFeaturedSpots();
@@ -1761,6 +1606,5 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user) loadMyBusinessListings(user);
         })();
     }
-    // --- END OF "GET FEATURED" LOGIC ---
 
 }); // End of DOMContentLoaded
