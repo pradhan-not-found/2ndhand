@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const phone = signupForm.querySelector('#phone').value;
             const password = signupForm.querySelector('#password').value;
             
+            // FIX: Explicit redirect URL for Sign Up
             const { data, error } = await _supabase.auth.signUp({
                 email: email,
                 password: password,
-                // UPDATED: Pass phone_number in the metadata so it saves to the profile
                 options: { 
+                    emailRedirectTo: window.location.origin + '/login.html', // Redirects back to login page after verification
                     data: { 
                         full_name: fullName,
                         phone_number: phone
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error) { alert('Error signing up: ' + error.message); }
             else {
                 alert('Sign up successful! Please check your email for a verification link.');
+                // Optional: Redirect them immediately or wait for them to click the link
                 window.location.href = 'login.html';
             }
         });
@@ -54,7 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const email = loginForm.querySelector('#email').value;
             const password = loginForm.querySelector('#password').value;
+            
+            // Standard password login doesn't usually trigger "Site Not Found" unless using magic links,
+            // but if you use Magic Links elsewhere, add redirectTo there too.
             const { data, error } = await _supabase.auth.signInWithPassword({ email: email, password: password });
+            
             if (error) { alert('Error logging in: ' + error.message); }
             else { window.location.href = 'index.html'; }
         });
@@ -88,8 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if(submitBtn) { submitBtn.textContent = "Sending..."; submitBtn.disabled = true; }
 
+            // FIX: Explicit redirect URL for Password Reset
             const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/update_password.html',
+                redirectTo: window.location.origin + '/update_password.html', // Points to your specific update page
             });
 
             if (error) {
@@ -169,7 +176,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <a href="signup.html" class="btn btn-primary sell-btn">Sign Up</a>`;
         }
     };
-    _supabase.auth.onAuthStateChange(() => { updateNavUI(); });
+    
+    // Listen for Auth State Changes (Redirect back from email link)
+    _supabase.auth.onAuthStateChange((event, session) => { 
+        if (event === 'SIGNED_IN') {
+            // Optional: If you want to force redirect to index on any sign-in
+            // window.location.href = 'index.html'; 
+        }
+        updateNavUI(); 
+    });
     updateNavUI();
 
     // --- PROFILE PAGE LOGIC (UPDATED) ---
@@ -1530,7 +1545,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const savedTheme = localStorage.getItem('theme');
-     
+      
     if (savedTheme) {
         applyTheme(savedTheme);
     } else if (systemSetting.matches) {
