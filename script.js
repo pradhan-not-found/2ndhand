@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavUI();
 
     // =================================================================
-    // 4. PROFILE PAGE LOGIC
+    // 4. PROFILE PAGE LOGIC (UPDATED WITH AUTO-SYNC FIX)
     // =================================================================
     const profileForm = document.querySelector('#profile-form');
     if (profileForm) {
@@ -366,14 +366,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // --- UPDATED GET PROFILE FUNCTION (THE FIX) ---
         const getProfile = async () => {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 document.getElementById('email').value = currentUser.email;
-                const { data: profile } = await _supabase.from('profiles').select('full_name, avatar_url, phone_number, business_name, business_logo_url').eq('id', currentUser.id).single();
+                
+                // Fetch existing profile data
+                let { data: profile } = await _supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                
+                // 1. Get Phone Number from Auth Metadata (where sign-up saved it)
+                const metaPhone = currentUser.user_metadata?.phone_number;
+                const metaName = currentUser.user_metadata?.full_name;
                 
                 if (profile) {
+                    let updates = {};
+                    let needsUpdate = false;
+
+                    // 2. If Profile table is missing phone, but Auth has it -> SYNC IT
+                    if (!profile.phone_number && metaPhone) {
+                        updates.phone_number = metaPhone;
+                        profile.phone_number = metaPhone; // Update local view immediately
+                        needsUpdate = true;
+                    }
+                    if (!profile.full_name && metaName) {
+                        updates.full_name = metaName;
+                        profile.full_name = metaName;
+                        needsUpdate = true;
+                    }
+
+                    // 3. Save to database in background
+                    if (needsUpdate) {
+                        await _supabase.from('profiles').update(updates).eq('id', currentUser.id);
+                    }
+
+                    // Populate UI
                     const fullNameEl = document.getElementById('full-name');
                     const phoneNumberEl = document.getElementById('phone-number');
                     const avatarImageEl = document.getElementById('avatar-image');
@@ -1438,35 +1466,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Featured Spots Count
     const checkFeaturedSpots = async () => {
         const spotsLeftEl = document.getElementById('feature-spots-left');
-        if (!spotsLeftEl) return;
-
-        const currentDate = new Date().toISOString(); 
-        const totalSpots = 4;
-
-        try {
-            const { count, error } = await _supabase
-                .from('business_listings')
-                .select('*', { count: 'exact', head: true })
-                .or(`is_featured.eq.true,reservation_expires_at.gt.${currentDate}`); 
-            
-            if (error) throw error;
-            
-            const spotsUsed = count || 0;
-            const spotsAvailable = totalSpots - spotsUsed;
-
-            if (spotsAvailable <= 0) {
-                spotsLeftEl.textContent = "All 4 featured spots are full this month. Please check back later!";
-                spotsLeftEl.style.color = "#ef4444"; // Red
-            } else {
-                spotsLeftEl.textContent = `${spotsAvailable} of 4 spots available for this month.`;
-                spotsLeftEl.style.color = "#ffffffff"; // Green
-            }
-
-        } catch (error) {
-            console.error('Error fetching featured/reserved spots:', error);
-            spotsLeftEl.textContent = "Could not load available spots. Please try again.";
-        }
+        if(!el) return;
+        const { count } = await _supabase.from('business_listings').select('*', {count:'exact', head:true}).or(`is_featured.eq.true,reservation_expires_at.gt.${new Date().toISOString()}`);
+        el.textContent = (4 - (count||0)) <= 0 ? "Full this month." : `${4 - (count||0)} spots available.`;
     };
+    checkSpots();
 
     // Get Featured Page Logic
     const featuredPageLogic = document.querySelector('#featured-page-logic');
