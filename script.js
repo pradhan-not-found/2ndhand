@@ -1099,7 +1099,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =================================================================
-    // 9. HOMEPAGE & EXTRAS
+    // 9. HOMEPAGE & EXTRAS (FIXED)
     // =================================================================
     
     // Featured
@@ -1463,14 +1463,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Featured Spots Count
+    // Featured Spots Count (FIXED)
     const checkFeaturedSpots = async () => {
         const spotsLeftEl = document.getElementById('feature-spots-left');
-        if(!el) return;
+        if(!spotsLeftEl) return;
         const { count } = await _supabase.from('business_listings').select('*', {count:'exact', head:true}).or(`is_featured.eq.true,reservation_expires_at.gt.${new Date().toISOString()}`);
-        el.textContent = (4 - (count||0)) <= 0 ? "Full this month." : `${4 - (count||0)} spots available.`;
+        spotsLeftEl.textContent = (4 - (count||0)) <= 0 ? "Full this month." : `${4 - (count||0)} spots available.`;
     };
-    checkSpots();
+    checkFeaturedSpots();
 
     // Get Featured Page Logic
     const featuredPageLogic = document.querySelector('#featured-page-logic');
@@ -1609,6 +1609,140 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = await checkFeatureAccess();
             if (user) loadMyBusinessListings(user);
         })();
+    }
+
+    // =================================================================
+    // 10. BUSINESS BROWSE PAGE LOGIC (The Missing Part)
+    // =================================================================
+    if (businessLayout) { // We already selected #business-layout in Section 9
+        const listingGrid = document.getElementById('business-listing-grid');
+        const searchInput = document.getElementById('search-filter');
+        const categoryRadios = businessLayout.querySelectorAll('input[name="category"]'); // Scoped to business layout
+        const loadMoreBtn = document.getElementById('load-more-btn-business');
+        
+        let currentPage = 0;
+        const itemsPerPage = 12;
+        let isLoading = false;
+
+        const loadBusinessListings = async (isNewQuery = false) => {
+            if (isLoading) return;
+            isLoading = true;
+            if (loadMoreBtn) loadMoreBtn.textContent = 'Loading...';
+
+            if (isNewQuery) {
+                currentPage = 0;
+                listingGrid.innerHTML = '';
+            }
+
+            const searchTerm = searchInput?.value.toLowerCase() || '';
+            // Find checked radio inside business layout
+            const checkedCategoryRadio = businessLayout.querySelector('input[name="category"]:checked');
+            const category = checkedCategoryRadio ? checkedCategoryRadio.value : 'all';
+
+            let query = _supabase.from('business_listings')
+                .select(`*, profiles!seller_id(full_name, avatar_url, business_name, business_logo_url)`);
+
+            if (category !== 'all') { query = query.eq('category', category); }
+            if (searchTerm) { query = query.or(`title.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`); }
+            
+            const from = currentPage * itemsPerPage;
+            const to = from + itemsPerPage - 1;
+            query = query.range(from, to);
+
+            const { data: listings, error } = await query;
+
+            if (error) {
+                console.error('Error fetching business listings:', error);
+                if (listingGrid) listingGrid.innerHTML = '<p>Could not load listings.</p>';
+            } else {
+                if (listings.length > 0) {
+                    renderBusinessListings(listings);
+                    currentPage++;
+                }
+
+                if (loadMoreBtn) {
+                    if (listings.length < itemsPerPage) { loadMoreBtn.style.display = 'none'; } 
+                    else { loadMoreBtn.style.display = 'block'; }
+                }
+                
+                if (isNewQuery && listings.length === 0) {
+                    listingGrid.innerHTML = '<p>No business listings found matching your criteria.</p>';
+                }
+            }
+            
+            isLoading = false;
+            if (loadMoreBtn) loadMoreBtn.textContent = 'Load More';
+        };
+
+        const renderBusinessListings = (listingsToRender) => {
+             if (!listingGrid) return;
+
+             listingsToRender.forEach(listing => {
+                 const displayName = listing.profiles?.business_name || listing.profiles?.full_name || 'Campus Seller';
+                 const displayImage = listing.profiles?.business_logo_url || listing.profiles?.avatar_url || 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
+                 const firstImage = listing.image_url && listing.image_url.length > 0 ? listing.image_url[0] : 'https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.jpg';
+
+                 const listingCardHTML = `
+                      <div class="product-card-link">
+                          <div class="product-card">
+                              <a href="product.html?id=${listing.id}&type=business">
+                                  <img src="${firstImage}" alt="${listing.title || 'Business Listing'}">
+                              </a>
+                              <div class="product-info">
+                                  <h3><a href="product.html?id=${listing.id}&type=business">${listing.title || 'Untitled Listing'}</a></h3>
+                                  <p class="price">From ₹${listing.price || 0}</p>
+                                  <div class="product-card-footer">
+                                      <div class="seller-info">
+                                          <img src="${displayImage}" alt="${displayName}">
+                                          <span>${displayName}</span>
+                                      </div>
+                                      <button class="btn-add-to-cart" data-id="${listing.id}" data-type="business"><i class='bx bx-cart-add'></i> Add to Cart</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>`;
+                 listingGrid.innerHTML += listingCardHTML;
+             });
+        };
+        
+        const handleFilterChange = () => { loadBusinessListings(true); };
+        
+        if (listingGrid) {
+            listingGrid.addEventListener('click', async (e) => {
+                const button = e.target.closest('.btn-add-to-cart');
+                if (button) {
+                    const productId = button.dataset.id;
+                    const itemType = button.dataset.type;
+                    const { data: { session } } = await _supabase.auth.getSession();
+                    if (!session) { showToast('Please log in to add items to your cart.', 'error'); window.location.href = 'login.html'; return; }
+
+                    const { error } = await _supabase.from('cart_items').insert({ product_id: productId, user_id: session.user.id, item_type: itemType });
+                    if (error) {
+                        if (error.code === '23505') { showToast('This item is already in your cart.', 'error'); }
+                        else { showToast('Error adding item to cart: ' + error.message, 'error'); }
+                    } else {
+                        showToast('Item added to cart!', 'success');
+                        updateNavUI();
+                    }
+                }
+            });
+        }
+
+        if (searchInput) { searchInput.addEventListener('change', handleFilterChange); }
+        if (categoryRadios) { categoryRadios.forEach(radio => radio.addEventListener('change', handleFilterChange)); }
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadBusinessListings(false); 
+            });
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('q');
+        if (searchQuery && searchInput) {
+            searchInput.value = searchQuery;
+        }
+        loadBusinessListings(true); 
     }
 
 }); // End of DOMContentLoaded
