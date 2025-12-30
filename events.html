@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="business.html">Business</a></li>
+                <li><a href="events.html" class="active-link">Events</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+            </ul>
+            <div class="nav-actions"></div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </nav>
+    </header>
+
+    <main class="product-page-main">
+        <div class="container">
+            
+            <div class="events-hero">
+                <h1 class="section-title">Campus Events</h1>
+                <p class="section-subtitle">Discover upcoming fests, book stalls on the virtual floor, or host your own event.</p>
+                <div style="margin-top: 2rem;">
+                    <button id="toggle-host-form-btn" class="btn btn-primary">
+                        <i class='bx bx-plus-circle'></i> Host an Event
+                    </button>
+                </div>
+            </div>
+
+            <div id="host-event-container" class="event-creator-card" style="display: none;">
+                <div class="event-creator-header">
+                    <h2><i class='bx bx-calendar-star'></i> Event Creator Studio</h2>
+                    <button id="close-host-form" style="background:none; border:none; font-size:1.5rem; cursor:pointer;"><i class='bx bx-x'></i></button>
+                </div>
+                
+                <div class="event-creator-body">
+                    <form id="host-event-form">
+                        <div class="form-grid-2">
+                            
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Event Poster</label>
+                                <div class="file-upload-zone">
+                                    <div class="upload-content">
+                                        <i class='bx bx-image-add'></i>
+                                        <span>Upload Event Poster</span>
+                                        <small>High quality landscape image recommended</small>
+                                    </div>
+                                    <input type="file" id="event-poster" accept="image/*" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Event Name</label>
+                                <div class="input-with-icon">
+                                    <i class='bx bx-rename'></i>
+                                    <input type="text" id="event-title" placeholder="e.g., Spring Fest 2025" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Event Date</label>
+                                <div class="input-with-icon">
+                                    <i class='bx bx-calendar'></i>
+                                    <input type="date" id="event-date" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Venue / Location</label>
+                                <div class="input-with-icon">
+                                    <i class='bx bx-map-pin'></i>
+                                    <input type="text" id="event-venue" placeholder="e.g., Main Auditorium, North Campus" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Description</label>
+                                <textarea id="event-desc" rows="3" placeholder="Describe the event highlights..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Total Stalls</label>
+                                <div class="input-with-icon">
+                                    <i class='bx bx-store-alt'></i>
+                                    <input type="number" id="event-stalls" min="1" max="50" placeholder="Max 50" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Price Per Stall (₹)</label>
+                                <div class="input-with-icon">
+                                    <i class='bx bx-rupee'></i>
+                                    <input type="number" id="event-stall-price" placeholder="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Payment QR Code (For Stall Bookings)</label>
+                                <div class="file-upload-zone" style="padding: 1.5rem;">
+                                    <div class="upload-content" style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                                        <i class='bx bx-qr-scan' style="font-size: 2rem; margin:0;"></i>
+                                        <div style="text-align: left;">
+                                            <span>Upload UPI QR Code</span>
+                                            <small>Participants scan this to book stalls.</small>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="event-qr" accept="image/*" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: right;">
+                            <button type="submit" class="btn btn-primary">Publish Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="events-grid" class="listing-grid">
+                <div class="loading-spinner"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Simple close button logic for the host form
+        document.getElementById('close-host-form')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('host-event-container').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

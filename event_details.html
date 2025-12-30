@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Floor Plan - 2ndhand</title>
+    <link rel="icon" type="image/png" href="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <header class="main-header main-header-static">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="2ndhand Logo">
+                <span>2ndhand</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="events.html"><i class='bx bx-arrow-back'></i> Back to Events</a></li>
+            </ul>
+            <div class="nav-actions"></div>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </nav>
+    </header>
+
+    <main class="product-page-main">
+        <div class="container">
+            
+            <div class="breadcrumb-container">
+                <a href="index.html">Home</a> <span class="separator">/</span> 
+                <a href="events.html">Events</a> <span class="separator">/</span> 
+                <span class="current" id="bread-event-name">Loading Event...</span>
+            </div>
+
+            <div id="event-detail-container" class="event-dashboard-grid">
+                
+                <div class="virtual-floor-section">
+                    <div class="floor-header">
+                        <h3><i class='bx bx-map-alt'></i> Virtual Floor Plan</h3>
+                        <div class="floor-legend">
+                            <span class="legend-item"><span class="dot available"></span> Open</span>
+                            <span class="legend-item"><span class="dot pending"></span> Pending</span>
+                            <span class="legend-item"><span class="dot booked"></span> Booked</span>
+                        </div>
+                    </div>
+
+                    <div class="virtual-floor-board perspective-wrapper">
+                        
+                        <div class="stage-area 3d-stage">
+                            <div class="stage-truss">
+                                <div class="light-beam left"></div>
+                                <div class="light-beam right"></div>
+                                <div class="light-beam center"></div>
+                            </div>
+
+                            <div class="stage-screen-wrapper">
+                                <img id="event-banner-img" src="" alt="Event Stage" class="stage-img">
+                                <div class="stage-overlay">
+                                    <span class="stage-label">MAIN EVENT STAGE</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stage-platform-reflection"></div>
+                        </div>
+
+                        <div class="stalls-container">
+                            <div class="audience-barrier">
+                                <p class="aisle-label">STALLS AREA</p>
+                            </div>
+                            
+                            <div id="stalls-grid" class="stalls-grid-layout isometric-grid">
+                                <div class="skeleton-stall"></div>
+                                <div class="skeleton-stall"></div>
+                                <div class="skeleton-stall"></div>
+                                <div class="skeleton-stall"></div>
+                                <div class="skeleton-stall"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-sidebar">
+                    <div class="event-meta-card glass-effect">
+                        <span class="status-pill status-open" id="event-status-badge">Open for Booking</span>
+                        
+                        <h1 id="event-title" class="event-title">Loading...</h1>
+                        
+                        <div class="event-date-loc">
+                            <div class="meta-row">
+                                <i class='bx bx-calendar'></i>
+                                <span id="event-date">...</span>
+                            </div>
+                            <div class="meta-row">
+                                <i class='bx bx-time'></i>
+                                <span id="event-time">...</span>
+                            </div>
+                            <div class="meta-row">
+                                <i class='bx bx-map'></i>
+                                <span id="event-location">...</span>
+                            </div>
+                        </div>
+
+                        <div class="price-tag-large">
+                            <span id="stall-price-display">₹...</span> 
+                            <small>/ stall</small>
+                        </div>
+
+                        <button id="view-receipt-btn" class="btn btn-secondary" style="display: none; width: 100%; margin-bottom: 1.5rem; justify-content: center;">
+                            <i class='bx bx-receipt'></i> View Booking Receipt
+                        </button>
+
+                        <div class="description-box">
+                            <h4>About the Event</h4>
+                            <p id="event-desc">Loading event details...</p>
+                        </div>
+
+                        <div class="organizer-mini">
+                            <img id="org-avatar" src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/default-avatar.png" alt="Organizer">
+                            <div>
+                                <span class="label">Organized by</span>
+                                <strong id="org-name">...</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="booking-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content checkout-modal-content">
+                <div class="checkout-header">
+                    <h3>Confirm Booking</h3>
+                    <span class="close-modal"><i class='bx bx-x'></i></span>
+                </div>
+                <div class="checkout-body">
+                    <div class="checkout-left">
+                        <div class="qr-wrapper">
+                            <img id="modal-qr-img" src="" alt="Payment QR" class="qr-image">
+                            <p class="scan-hint">Scan via UPI App</p>
+                        </div>
+                    </div>
+                    <div class="checkout-right">
+                        <div class="order-summary-card">
+                            <h4>Order Summary</h4>
+                            <div class="summary-row">
+                                <span>Item</span>
+                                <span>Event Stall</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Stall No.</span>
+                                <span class="badge-stall">#<span id="modal-stall-num">--</span></span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span id="modal-stall-price">--</span>
+                            </div>
+                        </div>
+
+                        <form id="stall-booking-form" style="margin-top: 1.5rem;">
+                            <div class="form-group">
+                                <label for="payment-ref" style="font-size: 0.9rem;">Transaction ID / UTR <span style="color:red">*</span></label>
+                                <input type="text" id="payment-ref" class="ref-input" placeholder="e.g. 3241xxxx8912" required>
+                                <p class="form-hint">Required for organizer verification.</p>
+                            </div>
+                            <button type="submit" class="btn btn-primary checkout-btn">Submit Request</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="receipt-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content receipt-modal-content">
+                <div class="receipt-header">
+                    <img src="https://uwgeszjlcnrooxtihdpq.supabase.co/storage/v1/object/public/assets/unnamed-removebg-preview.png" alt="Logo" class="receipt-logo">
+                    <h3>Official Receipt</h3>
+                    <span class="close-modal close-receipt"><i class='bx bx-x'></i></span>
+                </div>
+                
+                <div class="receipt-body">
+                    <div class="receipt-status-row">
+                        <span class="status-badge verified" id="receipt-status-badge">
+                            <i class='bx bx-check-circle'></i> VERIFIED BOOKING
+                        </span>
+                    </div>
+
+                    <div class="receipt-details">
+                        <div class="detail-group">
+                            <label>Event</label>
+                            <strong id="receipt-event-name">Loading...</strong>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-group">
+                                <label>Stall Number</label>
+                                <strong class="highlight-stall" id="receipt-stall-num">#00</strong>
+                            </div>
+                            <div class="detail-group">
+                                <label>Amount Paid</label>
+                                <strong id="receipt-price">₹0</strong>
+                            </div>
+                        </div>
+                        <div class="detail-group">
+                            <label>Booked By</label>
+                            <strong id="receipt-booker-name">---</strong>
+                        </div>
+                        <div class="detail-group">
+                            <label>Transaction Ref / UTR</label>
+                            <code id="receipt-ref">---</code>
+                        </div>
+                        <div class="detail-group">
+                            <label>Booking ID</label>
+                            <code id="receipt-id" style="color:var(--secondary-blue);">---</code>
+                        </div>
+                    </div>
+
+                    <div class="receipt-footer">
+                        <p>Present this receipt at the venue entry.</p>
+                        <small>2ndhand Verified System</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // Close buttons
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('booking-modal').style.display = 'none';
+                document.getElementById('receipt-modal').style.display = 'none';
+            });
+        });
+
+        // Click outside to close
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
