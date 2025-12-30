@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavUI();
 
     // =================================================================
-    // 4. PROFILE PAGE LOGIC (UPDATED WITH AUTO-SYNC FIX)
+    // 4. PROFILE PAGE LOGIC (UPDATED WITH AUTO-SYNC FIX AND EVENT DELETE)
     // =================================================================
     const profileForm = document.querySelector('#profile-form');
     if (profileForm) {
@@ -366,6 +366,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // --- NEW: Load My Hosted Events Function ---
+        const loadMyEvents = async (userId) => {
+            const eventsContainer = document.getElementById('my-events-container');
+            if (!eventsContainer) return;
+
+            eventsContainer.innerHTML = '<div class="loading-spinner">Loading Events...</div>';
+
+            const { data: events, error } = await _supabase
+                .from('events')
+                .select('*')
+                .eq('organizer_id', userId)
+                .order('event_date', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching events:', error);
+                eventsContainer.innerHTML = '<p>Error loading events.</p>';
+                return;
+            }
+
+            if (events.length === 0) {
+                eventsContainer.innerHTML = '<p style="text-align: center;">You have not hosted any events.</p>';
+                return;
+            }
+
+            eventsContainer.innerHTML = '';
+            events.forEach(event => {
+                const eventDate = new Date(event.event_date);
+                const isPast = eventDate < new Date();
+                const statusLabel = isPast ? '<span style="color: #ef4444;">(Ended)</span>' : '<span style="color: #10b981;">(Upcoming)</span>';
+
+                const card = document.createElement('div');
+                card.className = 'my-listing-card';
+                card.style.cursor = 'default';
+
+                card.innerHTML = `
+                    <img src="${event.poster_url || 'https://via.placeholder.com/100'}" alt="${event.title}" style="object-fit: cover;">
+                    <div class="my-listing-info">
+                        <h3>${event.title} ${statusLabel}</h3>
+                        <p class="price" style="font-size: 0.9rem; color: var(--text-light);">${eventDate.toLocaleDateString()}</p>
+                        <p style="font-size: 0.85rem;">${event.venue}</p>
+                    </div>
+                    <button class="btn-sold" style="background-color: #ef4444;" onclick="deleteEvent('${event.id}')">
+                        Delete Event
+                    </button>
+                `;
+                eventsContainer.appendChild(card);
+            });
+        };
+
         // --- UPDATED GET PROFILE FUNCTION (THE FIX) ---
         const getProfile = async () => {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -417,6 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 loadMyListings(currentUser.id);
+                // LOAD EVENTS FOR THE PROFILE PAGE
+                loadMyEvents(currentUser.id);
 
             } else { window.location.href = "login.html"; }
         };
@@ -533,9 +584,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const location = document.getElementById('item-location')?.value;
                 
                 if (!title || !price || !category) {
-                       showToast('Please fill in Title, Price, and Category.', 'error');
-                       if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'List Item for Sale'; }
-                       return;
+                        showToast('Please fill in Title, Price, and Category.', 'error');
+                        if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'List Item for Sale'; }
+                        return;
                 }
 
                 const { error: insertError } = await _supabase.from('products').insert({
@@ -924,14 +975,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const messageSellerBtn = document.getElementById('message-seller-btn');
             if (sellerPhoneNumber && messageSellerBtn) {
                  if (/^\d{10,15}$/.test(sellerPhoneNumber.replace(/\D/g,''))) {
-                      const message = encodeURIComponent(`Hi, I'm interested in your item "${productName}" listed on 2ndhand.`);
-                      messageSellerBtn.href = `https://wa.me/${sellerPhoneNumber.replace(/\D/g,'')}?text=${message}`;
-                      messageSellerBtn.target = "_blank";
-                      messageSellerBtn.classList.remove('disabled');
+                       const message = encodeURIComponent(`Hi, I'm interested in your item "${productName}" listed on 2ndhand.`);
+                       messageSellerBtn.href = `https://wa.me/${sellerPhoneNumber.replace(/\D/g,'')}?text=${message}`;
+                       messageSellerBtn.target = "_blank";
+                       messageSellerBtn.classList.remove('disabled');
                  } else {
-                      console.warn('Invalid phone number format provided by seller:', sellerPhoneNumber);
-                      messageSellerBtn.classList.add('disabled');
-                      messageSellerBtn.href = '#';
+                       console.warn('Invalid phone number format provided by seller:', sellerPhoneNumber);
+                       messageSellerBtn.classList.add('disabled');
+                       messageSellerBtn.href = '#';
                  }
             } else if (messageSellerBtn) {
                  messageSellerBtn.classList.add('disabled');
@@ -1099,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // =================================================================
-    // 9. HOMEPAGE & EXTRAS (FIXED)
+    // 9. HOMEPAGE & EXTRAS
     // =================================================================
     
     // Featured
@@ -1158,7 +1209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchFeaturedBusinesses();
     }
 
-    // Business Sell
+    // Business Sell (Logic to match your provided HTML)
     const businessSellFormElement = document.querySelector('#business-sell-form');
     if (businessSellFormElement) {
         const imageInput = document.getElementById('item-images');
@@ -1179,10 +1230,10 @@ document.addEventListener('DOMContentLoaded', () => {
                       selectedFiles.forEach(file => {
                            const reader = new FileReader();
                            reader.onload = (e) => {
-                                const previewWrapper = document.createElement('div');
-                                previewWrapper.className = 'img-preview-wrapper';
-                                previewWrapper.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
-                                previewContainer.appendChild(previewWrapper);
+                               const previewWrapper = document.createElement('div');
+                               previewWrapper.className = 'img-preview-wrapper';
+                               previewWrapper.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
+                               previewContainer.appendChild(previewWrapper);
                            };
                            reader.readAsDataURL(file);
                       });
@@ -1463,7 +1514,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Featured Spots Count (FIXED)
+    // Featured Spots Count
     const checkFeaturedSpots = async () => {
         const spotsLeftEl = document.getElementById('feature-spots-left');
         if(!spotsLeftEl) return;
@@ -1612,12 +1663,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =================================================================
-    // 10. BUSINESS BROWSE PAGE LOGIC (The Missing Part)
+    // 10. BUSINESS BROWSE PAGE LOGIC
     // =================================================================
-    if (businessLayout) { // We already selected #business-layout in Section 9
+    if (businessLayout) { 
         const listingGrid = document.getElementById('business-listing-grid');
         const searchInput = document.getElementById('search-filter');
-        const categoryRadios = businessLayout.querySelectorAll('input[name="category"]'); // Scoped to business layout
+        const categoryRadios = businessLayout.querySelectorAll('input[name="category"]'); 
         const loadMoreBtn = document.getElementById('load-more-btn-business');
         
         let currentPage = 0;
@@ -1635,7 +1686,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const searchTerm = searchInput?.value.toLowerCase() || '';
-            // Find checked radio inside business layout
             const checkedCategoryRadio = businessLayout.querySelector('input[name="category"]:checked');
             const category = checkedCategoryRadio ? checkedCategoryRadio.value : 'all';
 
@@ -1745,4 +1795,363 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBusinessListings(true); 
     }
 
+    // =================================================================
+    // 11. EVENTS & STALL BOOKING LOGIC
+    // =================================================================
+
+    const eventsGrid = document.getElementById('events-grid');
+    const hostEventForm = document.getElementById('host-event-form');
+    const toggleHostBtn = document.getElementById('toggle-host-form-btn');
+
+    if (eventsGrid) {
+        // 1. Load Events with Real-Time Availability Badges
+        const loadEvents = async () => {
+            eventsGrid.innerHTML = '<div class="loading-spinner"></div>';
+            const { data: events, error } = await _supabase.from('events').select('*').order('event_date', { ascending: true });
+
+            if (error) { eventsGrid.innerHTML = '<p>Error loading events.</p>'; return; }
+            if (events.length === 0) { eventsGrid.innerHTML = '<p>No upcoming events.</p>'; return; }
+
+            eventsGrid.innerHTML = '';
+            
+            for (const event of events) {
+                // Fetch available stalls count
+                const { count: availableStalls } = await _supabase
+                    .from('stalls')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('event_id', event.id)
+                    .eq('status', 'available');
+
+                // Determine Badge Logic
+                let statusClass = 'status-open';
+                let statusText = `${availableStalls || 0} Spots Left`;
+                
+                if (event.status === 'sold_out' || availableStalls === 0) {
+                    statusClass = 'status-closed';
+                    statusText = 'Sold Out';
+                } else if (availableStalls <= 5) {
+                    statusClass = 'status-limited';
+                    statusText = `Only ${availableStalls} Left!`;
+                }
+
+                // Render Professional Card
+                const cardHTML = `
+                    <a href="event_details.html?id=${event.id}" class="product-card-link">
+                        <div class="product-card" style="position: relative;">
+                            <span class="event-card-status ${statusClass}">${statusText}</span>
+                            <img src="${event.poster_url || 'https://via.placeholder.com/400x300'}" alt="${event.title}">
+                            <div class="product-info">
+                                <h3>${event.title}</h3>
+                                <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem;">
+                                    <i class='bx bx-calendar'></i> ${new Date(event.event_date).toLocaleDateString()}<br>
+                                    <i class='bx bx-map'></i> ${event.venue}
+                                </p>
+                                <div class="product-card-footer-event">
+                                    <div class="event-price-highlight">
+                                        ₹${event.stall_price}<small>/stall</small>
+                                    </div>
+                                    <div class="event-book-link">
+                                        Book Now <i class='bx bx-right-arrow-alt'></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                eventsGrid.innerHTML += cardHTML;
+            }
+        };
+        loadEvents();
+
+        // 2. Host Form Toggle Logic
+        if (toggleHostBtn) {
+            toggleHostBtn.addEventListener('click', async () => {
+                const { data: { session } } = await _supabase.auth.getSession();
+                if (!session) { window.location.href = 'login.html'; return; }
+                const form = document.getElementById('host-event-container');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                if(form.style.display === 'block') form.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // 3. Handle New Event Creation
+        if (hostEventForm) {
+            hostEventForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const { data: { session } } = await _supabase.auth.getSession();
+                const btn = hostEventForm.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
+                btn.disabled = true; btn.textContent = 'Publishing...';
+
+                try {
+                    const posterFile = document.getElementById('event-poster').files[0];
+                    const qrFile = document.getElementById('event-qr').files[0];
+                    
+                    // Upload Images
+                    const { data: pData } = await _supabase.storage.from('products').upload(`${session.user.id}/events/p_${Date.now()}`, posterFile);
+                    const posterUrl = _supabase.storage.from('products').getPublicUrl(pData.path).data.publicUrl;
+                    
+                    const { data: qData } = await _supabase.storage.from('products').upload(`${session.user.id}/events/q_${Date.now()}`, qrFile);
+                    const qrUrl = _supabase.storage.from('products').getPublicUrl(qData.path).data.publicUrl;
+
+                    // Insert Event Data
+                    const stallsCount = parseInt(document.getElementById('event-stalls').value);
+                    const { data: event, error: err } = await _supabase.from('events').insert({
+                        organizer_id: session.user.id,
+                        title: document.getElementById('event-title').value,
+                        event_date: document.getElementById('event-date').value,
+                        venue: document.getElementById('event-venue').value,
+                        description: document.getElementById('event-desc').value,
+                        total_stalls: stallsCount,
+                        stall_price: document.getElementById('event-stall-price').value,
+                        poster_url: posterUrl,
+                        payment_qr_url: qrUrl
+                    }).select().single();
+                    if(err) throw err;
+
+                    // Create Stalls (Virtual Floor Data)
+                    const stalls = [];
+                    for(let i=1; i<=stallsCount; i++) stalls.push({ event_id: event.id, stall_number: i, status: 'available' });
+                    const { error: sErr } = await _supabase.from('stalls').insert(stalls);
+                    if(sErr) throw sErr;
+
+                    showToast('Event published successfully!', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                    btn.disabled = false; btn.textContent = originalText;
+                }
+            });
+        }
+    }
+
+    // --- Event Details & Virtual Floor Logic (RECEIPT SYSTEM ADDED) ---
+    const eventDetailContainer = document.getElementById('event-detail-container');
+    if (eventDetailContainer) {
+        const eventId = new URLSearchParams(window.location.search).get('id');
+        if (!eventId) { eventDetailContainer.innerHTML = '<p>Event not found.</p>'; }
+        else {
+            const loadDetail = async () => {
+                const { data: { session } } = await _supabase.auth.getSession();
+                const userId = session?.user?.id;
+                
+                // 1. Fetch Event Data
+                const { data: event } = await _supabase.from('events').select('*').eq('id', eventId).single();
+                if(!event) return;
+
+                // Fix Breadcrumb
+                const breadName = document.getElementById('bread-event-name');
+                if(breadName) breadName.textContent = event.title;
+
+                // 2. Fetch Stalls Data (without the complex join first)
+                const { data: stalls, error: stallError } = await _supabase
+                    .from('stalls')
+                    .select('*')
+                    .eq('event_id', eventId)
+                    .order('stall_number', {ascending: true});
+
+                if(stallError) { console.error(stallError); return; }
+
+                // 3. Manually Fetch Booker Profiles
+                // Fix 1: Use Set to ensure unique IDs (prevents duplicate requests)
+                const bookerIds = [...new Set(stalls.filter(s => s.booked_by_user_id).map(s => s.booked_by_user_id))];
+                let profilesMap = {};
+                
+                if(bookerIds.length > 0) {
+                    const { data: profiles, error: profileError } = await _supabase
+                        .from('profiles')
+                        // Removed 'email' because it does not exist in public.profiles
+                        // Also removed spaces to prevent 400 Bad Request
+                        .select('id,full_name,phone_number') 
+                        .in('id', bookerIds);
+                        
+                    if (profileError) {
+                        console.error('Error loading profiles:', profileError);
+                    } else if(profiles) {
+                        profiles.forEach(p => profilesMap[p.id] = p);
+                    }
+                }
+
+                const isOrganizer = userId === event.organizer_id;
+
+                let stallsHTML = '';
+                stalls.forEach(s => {
+                    let cls = 'is-available', lbl = 'OPEN';
+                    
+                    // Allow click if you are Organizer OR the Booker
+                    let isMyBooking = (userId && s.booked_by_user_id === userId);
+                    let showReceipt = (s.status === 'booked' || s.status === 'pending') && (isOrganizer || isMyBooking);
+                    let clickableClass = showReceipt ? 'clickable-receipt' : '';
+
+                    if(s.status === 'pending') { cls='is-pending'; lbl='WAITING'; }
+                    if(s.status === 'booked') { cls='is-booked'; lbl='BOOKED'; }
+                    
+                    // Get Name from Map
+                    let bookerProfile = profilesMap[s.booked_by_user_id];
+                    let bookerName = bookerProfile ? bookerProfile.full_name : 'Unknown User';
+                    
+                    stallsHTML += `
+                        <div class="stall-unit ${cls} ${clickableClass}" 
+                             data-num="${s.stall_number}" 
+                             data-id="${s.id}" 
+                             data-status="${s.status}"
+                             data-ref="${s.payment_reference || 'N/A'}"
+                             data-booker="${bookerName}"
+                             data-event="${event.title}"
+                             data-price="${event.stall_price}"
+                             >
+                            <strong>${s.stall_number}</strong>
+                            <span>${lbl}</span>
+                        </div>
+                    `;
+                });
+
+                // Admin HTML
+                let adminHTML = '';
+                if(isOrganizer) {
+                    const pending = stalls.filter(s => s.status === 'pending');
+                    let rows = pending.map(p => {
+                        let pProfile = profilesMap[p.booked_by_user_id];
+                        let pName = pProfile ? pProfile.full_name : 'Unknown';
+                        return `
+                        <div class="request-card" style="background:var(--bg-light); border:1px solid var(--border-color); padding:1rem; border-radius:8px; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>Stall #${p.stall_number}</strong><br><small>By: ${pName}</small><br><small>Ref: ${p.payment_reference}</small></div>
+                            <div>
+                                <button onclick="approveStall('${p.id}')" class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem; margin-right:5px;">Approve</button>
+                                <button onclick="rejectStall('${p.id}')" class="btn btn-secondary" style="padding:6px 12px; background:#ef4444; font-size:0.8rem;">Reject</button>
+                            </div>
+                        </div>`
+                    }).join('');
+                    
+                    adminHTML = `
+                        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border-color);">
+                            <h3 style="margin-bottom:1rem;">Organizer Panel</h3>
+                            ${rows || '<p style="color:var(--text-light);">No pending requests.</p>'}
+                        </div>`;
+                }
+
+                // Render Layout
+                eventDetailContainer.innerHTML = `
+                    <div class="virtual-floor-section">
+                        <div class="floor-header">
+                            <h3><i class='bx bx-map-alt'></i> Virtual Floor Plan</h3>
+                            <div class="floor-legend">
+                                <span class="legend-item"><span class="dot available"></span> Open</span>
+                                <span class="legend-item"><span class="dot pending"></span> Pending</span>
+                                <span class="legend-item"><span class="dot booked"></span> Booked</span>
+                            </div>
+                        </div>
+                        <div class="virtual-floor-board perspective-wrapper">
+                            <div class="stage-area 3d-stage">
+                                <div class="stage-truss"><div class="light-beam left"></div><div class="light-beam center"></div><div class="light-beam right"></div></div>
+                                <div class="stage-screen-wrapper">
+                                    <img id="event-banner-img" src="${event.poster_url}" alt="Event Stage" class="stage-img">
+                                    <div class="stage-overlay"><span class="stage-label">MAIN EVENT STAGE</span></div>
+                                </div>
+                                <div class="stage-platform-reflection"></div>
+                            </div>
+                            <div class="stalls-container">
+                                <div class="audience-barrier"><p class="aisle-label">STALLS AREA</p></div>
+                                <div id="stalls-grid" class="stalls-grid-layout isometric-grid">
+                                    ${stallsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-sidebar">
+                        <div class="event-meta-card glass-effect">
+                            <span class="status-pill status-open">Open for Booking</span>
+                            <h1 class="event-title">${event.title}</h1>
+                            <div class="event-date-loc">
+                                <div class="meta-row"><i class='bx bx-calendar'></i><span>${new Date(event.event_date).toDateString()}</span></div>
+                                <div class="meta-row"><i class='bx bx-map'></i><span>${event.venue}</span></div>
+                            </div>
+                            <div class="price-tag-large"><span>₹${event.stall_price}</span> <small>/ stall</small></div>
+                            <div class="description-box"><h4>About the Event</h4><p>${event.description}</p></div>
+                            ${adminHTML}
+                        </div>
+                    </div>
+                `;
+
+                // 1. OPEN BOOKING MODAL (For Available Stalls)
+                const bookingModal = document.getElementById('booking-modal');
+                document.querySelectorAll('.stall-unit.is-available').forEach(b => {
+                    b.addEventListener('click', () => {
+                        if(!userId) { window.location.href='login.html'; return; }
+                        document.getElementById('modal-stall-num').innerText = b.dataset.num;
+                        document.getElementById('modal-stall-price').innerText = '₹'+event.stall_price;
+                        document.getElementById('modal-qr-img').src = event.payment_qr_url;
+                        
+                        const form = document.getElementById('stall-booking-form');
+                        form.onsubmit = async (e) => {
+                            e.preventDefault();
+                            const ref = document.getElementById('payment-ref').value;
+                            await _supabase.from('stalls').update({ status:'pending', booked_by_user_id: userId, payment_reference: ref }).eq('id', b.dataset.id);
+                            showToast('Request Sent! Waiting for host approval.', 'success'); 
+                            setTimeout(()=>location.reload(), 1500);
+                        };
+                        bookingModal.style.display = 'flex';
+                    });
+                });
+
+                // 2. OPEN RECEIPT MODAL (For Booked/Pending Stalls)
+                const receiptModal = document.getElementById('receipt-modal');
+                if(receiptModal) {
+                    document.querySelectorAll('.stall-unit.clickable-receipt').forEach(b => {
+                        b.addEventListener('click', () => {
+                            document.getElementById('receipt-event-name').innerText = b.dataset.event;
+                            document.getElementById('receipt-stall-num').innerText = "#" + b.dataset.num;
+                            document.getElementById('receipt-price').innerText = "₹" + b.dataset.price;
+                            document.getElementById('receipt-booker-name').innerText = b.dataset.booker;
+                            document.getElementById('receipt-ref').innerText = b.dataset.ref;
+                            document.getElementById('receipt-id').innerText = b.dataset.id.split('-')[0].toUpperCase();
+
+                            const badge = document.getElementById('receipt-status-badge');
+                            if (b.dataset.status === 'booked') {
+                                badge.className = 'status-badge verified';
+                                badge.innerHTML = "<i class='bx bx-check-circle'></i> VERIFIED BOOKING";
+                                badge.style.cssText = "background: #d1fae5; color: #065f46; border-color: #10b981;";
+                            } else {
+                                badge.className = 'status-badge';
+                                badge.innerHTML = "<i class='bx bx-time'></i> PENDING APPROVAL";
+                                badge.style.cssText = "background: #fffbeb; color: #b45309; border-color: #f59e0b;";
+                            }
+                            receiptModal.style.display = 'flex';
+                        });
+                    });
+
+                    // Receipt Close Logic
+                    const closeReceiptBtn = document.querySelector('.close-receipt');
+                    if(closeReceiptBtn) closeReceiptBtn.addEventListener('click', () => receiptModal.style.display = 'none');
+                    receiptModal.addEventListener('click', (e) => {
+                        if (e.target === receiptModal) receiptModal.style.display = 'none';
+                    });
+                }
+            };
+            loadDetail();
+        }
+    }
+
 }); // End of DOMContentLoaded
+
+// --- GLOBAL FUNCTIONS (Attached to Window for onClick events) ---
+
+window.approveStall = async (id) => {
+    if(!confirm("Approve this booking? The stall will be marked as booked.")) return;
+    const { error } = await _supabase.from('stalls').update({ status: 'booked' }).eq('id', id);
+    if(error) alert(error.message); else location.reload();
+};
+
+window.rejectStall = async (id) => {
+    if(!confirm("Reject this request?")) return;
+    const { error } = await _supabase.from('stalls').update({ status: 'available', booked_by_user_id: null, payment_reference: null }).eq('id', id);
+    if(error) alert(error.message); else location.reload();
+};
+
+window.deleteEvent = async (eventId) => {
+    if(!confirm("Are you sure you want to delete this event? This cannot be undone.")) return;
+    const { error } = await _supabase.from('events').delete().eq('id', eventId);
+    if(error) { alert('Error deleting event: ' + error.message); } 
+    else { alert('Event deleted successfully.'); location.reload(); }
+};
