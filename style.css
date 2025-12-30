@@ -166,7 +166,7 @@ button.btn-add-to-cart i { font-size: 0.9rem; margin-right: 0; }
 /* Image Size (1:1 Ratio) */
 .main-product-image { 
     width: 100%; 
-    height: 100%; /* Fills the container */
+    height: 100%; /* Fills the container */ 
     aspect-ratio: 1 / 1; 
     object-fit: contain; 
     display: block; 
@@ -648,3 +648,1083 @@ body[data-theme="dark"] .featured-promo-banner { background: linear-gradient(135
     background-color: #fffbeb !important;
 }
 body[data-theme="dark"] .feature-select-card.selected { background-color: #374151 !important; border-color: #d97706 !important; }
+
+/* =========================================
+   PROFESSIONAL EVENT DETAILS STYLING
+   ========================================= */
+
+/* 1. Main Grid Layout */
+#event-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 380px; /* Content | Sidebar */
+    gap: 2rem;
+    align-items: start;
+    position: relative;
+    padding-bottom: 4rem;
+}
+
+/* 2. The Banner (FIXED: No Cropping) */
+.event-stage-banner {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: auto; /* Let height adjust naturally */
+    max-height: 500px; /* Cap it so it doesn't dominate */
+    aspect-ratio: 16 / 9; /* Standard video/poster ratio */
+    object-fit: contain; /* Shows FULL image without cropping */
+    background-color: #0f172a; /* Dark bg for posters with different ratios */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+}
+
+/* 3. The Sidebar (Sticky Info Box) */
+.event-meta-header {
+    grid-column: 2;
+    grid-row: 1 / span 2; 
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 100px; 
+    height: fit-content;
+    z-index: 10;
+}
+
+.event-meta-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.event-meta-header p {
+    color: var(--text-light);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 4. Virtual Floor (Stalls Area) */
+.virtual-space-container {
+    grid-column: 1;
+    grid-row: 2;
+    background: var(--bg-light); 
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    padding: 2.5rem;
+    position: relative;
+    text-align: center;
+}
+
+/* Professional Stall Grid */
+.stalls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); 
+    gap: 12px;
+    margin-top: 1rem;
+}
+
+.stall-box {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.stall-box small { font-size: 0.6rem; font-weight: 500; text-transform: uppercase; margin-top: 2px; }
+
+/* Status Colors */
+.stall-box.available { border-color: #10b981; color: #10b981; background: #ecfdf5; }
+.stall-box.available:hover { background: #10b981; color: #fff; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3); }
+
+.stall-box.pending { border-color: #f59e0b; color: #b45309; background: #fffbeb; cursor: not-allowed; }
+.stall-box.booked { background-color: #f1f5f9; color: #94a3b8; border-color: transparent; cursor: default; }
+.stall-box.booked span { text-decoration: line-through; }
+
+
+/* --- Mobile Responsive Fixes --- */
+@media (max-width: 992px) {
+    #event-detail-container {
+        grid-template-columns: 1fr; /* Stack vertically */
+        gap: 1.5rem;
+    }
+    .event-meta-header {
+        grid-column: 1;
+        grid-row: auto;
+        order: -1; /* Show info above banner on mobile */
+        position: static;
+        margin-bottom: 0;
+    }
+    .event-stage-banner {
+        grid-column: 1;
+        grid-row: auto;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+    .virtual-space-container {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+/* --- EXTRA PROFESSIONAL STYLES (Added for Modal & Skeleton) --- */
+
+/* 1. Breadcrumbs */
+.breadcrumb-container {
+    padding: 1rem 0 2rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.breadcrumb-container a { color: var(--text-light); text-decoration: none; transition: color 0.2s; }
+.breadcrumb-container a:hover { color: var(--secondary-blue); }
+.breadcrumb-container .separator { color: var(--border-color); }
+.breadcrumb-container .current { color: var(--text-dark); font-weight: 500; }
+
+/* 2. Skeleton Loading Animation */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+}
+@keyframes skeleton-loading { 
+    0% { background-position: 200% 0; } 
+    100% { background-position: -200% 0; } 
+}
+body[data-theme="dark"] .skeleton {
+    background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+}
+
+.sk-banner { width: 100%; height: 350px; border-radius: 16px; margin-bottom: 2rem; }
+.sk-title { height: 40px; width: 60%; margin: 0 auto 1.5rem; }
+.sk-text { height: 20px; border-radius: 4px; }
+.sk-box { aspect-ratio: 1; border-radius: 12px; }
+
+/* 3. Checkout Modal Layout */
+.checkout-modal-content {
+    max-width: 800px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-light);
+}
+.checkout-header h3 { margin: 0; font-size: 1.25rem; }
+.checkout-header .close-modal { position: static; font-size: 1.5rem; color: var(--text-light); transition: color 0.2s; }
+.checkout-header .close-modal:hover { color: var(--text-dark); }
+
+.checkout-body {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    min-height: 400px;
+}
+
+.checkout-left { padding: 2rem; border-right: 1px solid var(--border-color); }
+.checkout-right { padding: 2rem; background-color: var(--bg-light); }
+
+.step-title {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.qr-wrapper {
+    text-align: center;
+    background: #fff;
+    border: 1px dashed var(--border-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+}
+.qr-image { width: 140px; height: 140px; object-fit: contain; display: block; margin-bottom: 0.5rem; }
+.scan-hint { font-size: 0.8rem; color: var(--text-light); }
+
+.ref-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    background: var(--bg-white);
+    color: var(--text-dark);
+}
+.form-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 6px; }
+
+.checkout-btn { width: 100%; padding: 14px; font-size: 1rem; margin-top: 1rem; }
+
+/* Order Summary Card */
+.order-summary-card {
+    background: var(--bg-white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+.order-summary-card h4 { margin-bottom: 1.5rem; font-size: 1.1rem; }
+
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.95rem; color: var(--text-dark); }
+.badge-stall { background: #eff6ff; color: var(--secondary-blue); padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+
+.summary-divider { height: 1px; background: var(--border-color); margin: 1rem 0; border-style: dashed; }
+
+.summary-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.25rem; color: var(--primary-green); }
+
+.trust-badge {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0.8;
+}
+
+/* Mobile Responsive for Checkout Modal */
+@media (max-width: 768px) {
+    .checkout-body { grid-template-columns: 1fr; }
+    .checkout-left { border-right: none; border-bottom: 1px solid var(--border-color); order: 2; }
+    .checkout-right { order: 1; padding: 1.5rem; }
+    .qr-wrapper { display: block; width: 100%; margin: 0 auto 1.5rem auto;}
+    .qr-image { margin: 0 auto 0.5rem; }
+    .modal-content { max-height: 90vh; overflow-y: auto; }
+}
+
+/* Modal Overlay Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+.modal-content {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    animation: modalPop 0.3s ease-out;
+}
+@keyframes modalPop { 
+    from { transform: scale(0.9); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+}
+.close-modal {
+    position: absolute; top: 10px; right: 15px;
+    font-size: 1.5rem; cursor: pointer;
+}
+
+/* --- PROFESSIONAL EVENT PAGE STYLES --- */
+
+/* Hero Section Alignment */
+.events-hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* The Form Container (Creator Studio Look) */
+.event-creator-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    margin-bottom: 4rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.event-creator-header {
+    background: var(--bg-light);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.event-creator-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.event-creator-body {
+    padding: 2rem;
+}
+
+/* Custom File Upload Zone */
+.file-upload-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg-light);
+    position: relative;
+}
+
+.file-upload-zone:hover {
+    border-color: var(--secondary-blue);
+    background-color: #eef2ff;
+}
+
+/* Hide the actual ugly input */
+.file-upload-zone input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-content i {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.upload-content span {
+    display: block;
+    font-weight: 600;
+    color: var(--secondary-blue);
+}
+
+.upload-content small {
+    color: var(--text-light);
+}
+
+/* Form Grid System */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Input with Icon Wrapper */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 1.2rem;
+}
+
+.input-with-icon input, 
+.input-with-icon select, 
+.input-with-icon textarea {
+    padding-left: 44px !important; /* Make room for icon */
+}
+
+/* Dark Mode Adjustments */
+body[data-theme="dark"] .event-creator-header { background-color: #1f2937; }
+body[data-theme="dark"] .file-upload-zone { background-color: #1f2937; border-color: #374151; }
+body[data-theme="dark"] .file-upload-zone:hover { background-color: #374151; border-color: var(--secondary-blue); }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* --- Event Card Professional Styles --- */
+
+/* The Card Container (ensure smooth lift on hover) */
+.product-card-link .product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.product-card-link:hover .product-card {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* The Floating Badge ("Only 3 Left!") */
+.event-card-status {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 30px; /* Pill shape is more modern */
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Softer, deeper shadow */
+    border: 1px solid rgba(255,255,255,0.2); /* Subtle inner border */
+    backdrop-filter: blur(4px); /* Glassmorphism effect if bg is transparent */
+}
+
+/* Status Colors */
+.status-open { background-color: #10b981; } /* Emerald Green */
+.status-limited { background-color: #1f2937; } /* Premium Dark Grey/Black */
+.status-closed { background-color: #ef4444; } /* Red */
+
+/* Footer Section Layout */
+.product-card-footer-event {
+    margin-top: auto;
+    padding-top: 1.25rem; /* More breathing room */
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between; /* Pushes Price left, Button right */
+    align-items: center;
+}
+
+/* Price Styling */
+.event-price-highlight {
+    color: var(--primary-green); /* Changed to Green as requested */
+    font-weight: 800;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.event-price-highlight small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-left: 2px;
+}
+
+/* "Book Now" Button/Link Styling */
+.event-book-link {
+    color: var(--secondary-blue);
+    background-color: #eff6ff; /* Very light blue background */
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.event-book-link i {
+    margin-left: 6px;
+    transition: transform 0.2s ease;
+}
+
+/* Interaction: Button turns blue, arrow moves */
+.product-card-link:hover .event-book-link {
+    background-color: var(--secondary-blue);
+    color: white;
+    text-decoration: none;
+}
+
+.product-card-link:hover .event-book-link i {
+    transform: translateX(4px);
+}
+
+/* Dark Mode Adjustments */
+body[data-theme="dark"] .event-book-link {
+    background-color: rgba(74, 96, 245, 0.15); /* Dark mode subtle bg */
+    color: #a5b4fc;
+}
+body[data-theme="dark"] .product-card-link:hover .event-book-link {
+    background-color: var(--secondary-blue);
+    color: white;
+}
+body[data-theme="dark"] .event-price-highlight small {
+    color: #9ca3af; 
+}
+
+/* --- VIRTUAL EVENT DASHBOARD LAYOUT (Added) --- */
+.event-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+    padding-bottom: 4rem;
+}
+
+/* Left Column: The Floor Plan Wrapper */
+.virtual-floor-section {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.floor-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-light);
+}
+
+.floor-header h3 { font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+
+/* Legend Styles */
+.floor-legend { display: flex; gap: 15px; font-size: 0.85rem; }
+.legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-light); }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.available { background-color: var(--primary-green); box-shadow: 0 0 5px var(--primary-green); }
+.dot.pending { background-color: #f59e0b; }
+.dot.booked { background-color: #9ca3af; }
+
+/* Sidebar Styling */
+.event-meta-card {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 100px;
+}
+.status-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    color: white;
+    background: var(--primary-green);
+}
+.event-title { font-size: 1.6rem; line-height: 1.2; margin-bottom: 1.5rem; }
+.event-date-loc { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+.meta-row { display: flex; align-items: center; gap: 12px; color: var(--text-dark); font-size: 0.95rem; }
+.meta-row i { color: var(--secondary-blue); font-size: 1.25rem; background: #eff6ff; padding: 6px; border-radius: 6px; }
+
+.price-tag-large { font-size: 2.25rem; color: var(--primary-green); font-weight: 800; margin-bottom: 2rem; border-top: 1px dashed var(--border-color); border-bottom: 1px dashed var(--border-color); padding: 1.5rem 0; }
+.price-tag-large small { font-size: 1rem; color: var(--text-light); font-weight: 500; }
+
+.organizer-mini { display: flex; align-items: center; gap: 12px; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+.organizer-mini img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
+.organizer-mini .label { display: block; font-size: 0.75rem; color: var(--text-light); }
+
+/* Skeleton */
+.skeleton-stall { width: 100%; aspect-ratio: 1; background: #e2e8f0; border-radius: 12px; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .event-dashboard-grid { grid-template-columns: 1fr; }
+    .event-meta-card { position: static; order: -1; margin-bottom: 2rem; }
+    .stage-area { max-width: 100%; margin-bottom: 2rem; }
+    .stage-img { height: 200px; }
+}
+
+
+/* =======================================================
+   VIRTUAL 3D ENVIRONMENT UPDATES (Added by Request)
+   ======================================================= */
+
+/* 1. Perspective Wrapper */
+.perspective-wrapper {
+    perspective: 1200px; /* Controls how strong the 3D effect is */
+    padding: 3rem 2rem;
+    overflow: hidden;
+    /* Fancy floor background */
+    background-color: #0f172a; 
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    min-height: 600px;
+    border-bottom: 4px solid #1e293b;
+}
+
+body[data-theme="light"] .perspective-wrapper {
+    background-color: #f8fafc;
+    background-image: 
+        linear-gradient(#e2e8f0 1px, transparent 1px),
+        linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+}
+
+/* 2. The 3D Stage (FIXED SIZE) */
+.stage-area.3d-stage {
+    transform-style: preserve-3d;
+    position: relative;
+    margin-bottom: 5rem;
+    z-index: 10;
+    max-width: 500px; /* Reduced width */
+    margin: 0 auto 3rem auto; /* Centered */
+}
+
+/* Stage Lights / Truss */
+.stage-truss {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 10px;
+    background: #333;
+    display: flex;
+    justify-content: space-around;
+    z-index: 5;
+    border-radius: 5px;
+}
+
+.light-beam {
+    width: 60px;
+    height: 150px; /* Shorter lights */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent);
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    filter: blur(8px);
+    animation: flickerLight 4s infinite alternate;
+}
+
+.light-beam.center { animation-delay: 1s; background: linear-gradient(to bottom, rgba(74, 96, 245, 0.3), transparent); } /* Blueish center light */
+
+@keyframes flickerLight {
+    0% { opacity: 0.6; }
+    100% { opacity: 0.9; }
+}
+
+/* Enhanced Stage Screen (FIXED SIZE) */
+.stage-screen-wrapper {
+    transform: rotateX(5deg);
+    border: 8px solid #000;
+    box-shadow: 0 0 30px rgba(74, 96, 245, 0.2); /* Glow */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Makes image short/wide "Landscape" */
+.stage-img {
+    width: 100%;
+    height: 180px; /* Reduced height significantly */
+    object-fit: cover;
+}
+
+.stage-overlay {
+    position: absolute;
+    bottom: 5px; /* Lifted up from bottom */
+    left: 0; 
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 30px 20px 20px; /* Increased bottom padding */
+    color: white;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.stage-label {
+    font-family: 'Orbitron', sans-serif; /* Tech font */
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 0 10px #24b47e;
+}
+
+.stage-platform-reflection {
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 50%;
+    filter: blur(10px);
+}
+
+/* 3. The Isometric Stall Grid */
+.stalls-container {
+    perspective: 1000px;
+    margin-top: 2rem;
+}
+
+.audience-barrier {
+    border-top: none; /* REMOVED LINE */
+    margin-bottom: 3rem; /* ADDED GAP */
+    text-align: center;
+}
+
+.aisle-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    letter-spacing: 2px;
+    font-weight: 700;
+    opacity: 0.7;
+}
+
+.stalls-grid-layout.isometric-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    transform: rotateX(20deg); /* This tilts the floor back */
+    transform-style: preserve-3d;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* 4. The "Hut" / Booth Design (Replaces flat boxes) */
+.stall-unit {
+    width: 75px; /* Slightly smaller width */
+    height: 60px; /* Reduced height for better proportion */
+    position: relative;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Softer shadow */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,0.1); /* Thicker border for visibility */
+
+    /* Flexbox for centering text */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    margin-top: 25px; /* Space for roof */
+}
+
+/* Typography Improvements */
+.stall-unit strong {
+    display: block;
+    font-size: 1.1rem; /* Visible Number */
+    font-weight: 800;
+    line-height: 1;
+    color: #111827; /* Dark text */
+    z-index: 10;
+    position: relative;
+}
+
+.stall-unit small, .stall-unit span { 
+    display: block;
+    font-size: 0.65rem; /* Small status text */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    z-index: 10;
+    position: relative;
+    color: #374151; /* Dark Grey text default */
+}
+
+/* Roof Top */
+.stall-unit::before {
+    content: '';
+    position: absolute;
+    top: -20px; /* Height of roof */
+    left: -2px; /* overlap border */
+    right: -2px;
+    height: 20px;
+    background: inherit;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 1;
+    border-bottom: none;
+}
+
+/* Awning / Counter */
+.stall-unit::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 0 0 2px 2px;
+}
+
+/* Hut Hover Effect */
+.stall-unit:hover {
+    transform: translateY(-10px) scale(1.05);
+    z-index: 10;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+}
+
+/* Hut Colors based on status */
+
+/* AVAILABLE (Green Border, White BG, Dark Text) */
+.stall-unit.is-available {
+    background: #ffffff;
+    border-color: #24b47e;
+}
+.stall-unit.is-available::before { background-color: #24b47e; } /* Green Roof for contrast */
+.stall-unit.is-available strong { color: #064e3b; }
+.stall-unit.is-available span { color: #065f46; }
+
+/* PENDING (Yellow/Orange Border, Light Yellow BG, Dark Text) */
+.stall-unit.is-pending {
+    background: #fffbeb;
+    border-color: #f59e0b;
+}
+.stall-unit.is-pending::before { background-color: #f59e0b; } /* Orange Roof */
+.stall-unit.is-pending strong { color: #78350f; }
+.stall-unit.is-pending span { color: #92400e; }
+
+/* BOOKED (Grey BG, Grey Roof, Dark Text) */
+.stall-unit.is-booked {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    transform: scale(0.95);
+}
+.stall-unit.is-booked::before { background-color: #9ca3af; } /* Grey Roof */
+.stall-unit.is-booked strong { color: #374151; }
+.stall-unit.is-booked span { color: #4b5563; }
+
+/* MINE (Blue Theme) */
+.stall-unit.is-mine {
+    background: #eff6ff;
+    border-color: #4a60f5;
+    transform: scale(1) !important;
+    box-shadow: 0 0 15px rgba(74, 96, 245, 0.3);
+}
+.stall-unit.is-mine::before { background-color: #4a60f5; }
+.stall-unit.is-mine strong { color: #1e3a8a; }
+.stall-unit.is-mine span { color: #1e40af; }
+
+
+/* =========================================
+   DIGITAL RECEIPT / TICKET STYLING (UPDATED)
+   ========================================= */
+
+/* The Ticket Container */
+.receipt-modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 360px !important; /* Ticket width */
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 0 !important; /* Reset padding to handle sections manually */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    position: relative;
+    font-family: 'Inter', sans-serif;
+    border: none !important;
+}
+
+/* 1. Header Section (Logo & Title) */
+.receipt-header {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-blue)); /* Updated to brand gradient */
+    color: white;
+    padding: 2rem 1.5rem 2.5rem; /* Extra bottom padding for the "cut" effect */
+    text-align: center;
+    position: relative;
+}
+
+.receipt-logo {
+    height: 50px;
+    width: auto;
+    display: block;
+    margin: 0 auto 0.5rem;
+    filter: brightness(0) invert(1); /* Make logo white if it's black */
+}
+
+.receipt-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.9;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Close Button Override for Receipt */
+.close-receipt {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: 0.3s;
+}
+.close-receipt:hover { color: white; }
+
+/* 2. Body Section (Details) */
+.receipt-body {
+    background: #fff;
+    padding: 1.5rem;
+    position: relative;
+}
+
+/* The "Perforated" Jagged Line Effect (Superior Mask Method) */
+.receipt-body::before {
+    content: "";
+    position: absolute;
+    top: -10px; /* Position exactly at the overlap */
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: #fff;
+    /* This creates the jagged/perforated tooth pattern */
+    -webkit-mask-image: radial-gradient(circle at 10px 0, transparent 0, transparent 10px, black 11px);
+    -webkit-mask-size: 20px 20px;
+    -webkit-mask-repeat: repeat-x;
+    mask-image: radial-gradient(circle at 10px 0, transparent 0, transparent 10px, black 11px);
+    mask-size: 20px 20px;
+    mask-repeat: repeat-x;
+    transform: rotate(180deg);
+}
+
+/* 3. Verification Badge */
+.receipt-status-row {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+
+.status-badge.verified {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #34d399;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+/* NEW: Pending Badge Style */
+.status-badge.pending {
+    background: #fffbeb;
+    color: #b45309;
+    border-color: #f59e0b;
+}
+
+.status-badge i {
+    font-size: 1.1rem;
+}
+
+/* 4. Data Rows */
+.receipt-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.detail-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-group label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.detail-group strong {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.highlight-stall {
+    font-size: 1.4rem !important;
+    color: var(--primary-green) !important;
+    font-family: 'Orbitron', sans-serif; /* Tech feel for numbers */
+}
+
+/* Monospace Code for ID */
+.detail-group code {
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #334155;
+    letter-spacing: 1px;
+    border: 1px dashed #cbd5e1;
+}
+
+/* 5. Footer (Barcode-ish look) */
+.receipt-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed #e2e8f0;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.receipt-footer p {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.receipt-footer small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
